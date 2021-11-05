@@ -1,0 +1,101 @@
+.movies__img {
+  width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.movies__description {
+  margin-top: 14px;
+  height: 45px;
+  border-bottom: 1px solid #e8e8e8;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.movies__name {
+  max-width: 85%;
+}
+.movies__like {
+  width: 24px;
+  height: 24px;
+  background-color: #f4f4f4;
+  border-radius: 36px;
+  background-image: url(../../images/no-like.svg);
+  background-size: 10px 8.5px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.movies__like:hover {
+  cursor: pointer;
+}
+.movies__like_liked {
+  background-image: url(../../images/like.svg);
+}
+
+.movies__trash {
+  width: 24px;
+  height: 24px;
+  border-radius: 36px;
+  background-color: #f4f4f4;
+  background-size: 9px 9px;
+  background-image: url(../../images/trash.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s linear;
+}
+
+.movies__card:hover .movies__trash {
+  cursor: pointer;
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.3s linear;
+}
+
+.movies__duration {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 13px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #a0a0a0;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  /* Временно для пиксель перфект */
+  .movies__card:not(:nth-child(-n + 8)) {
+    display: none;
+  }
+
+  .movies__description {
+    height: 45px;
+  }
+  .movies__name {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Временно для пиксель перфект */
+  .movies__card:not(:nth-child(-n + 5)) {
+    display: none;
+  }
+  .movies__description {
+    margin-top: 15px;
+  }
+  .movies__name {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .movies__duration {
+    font-size: 10px;
+    line-height: 12px;
+  }
+}

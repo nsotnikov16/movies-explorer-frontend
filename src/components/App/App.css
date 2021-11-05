@@ -1,0 +1,309 @@
+@import url(../../vendor/normalize.css);
+@import url(../../vendor/fonts/fonts.css);
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.page {
+  font-family: "Inter";
+}
+.page__container {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 70px;
+}
+
+@media (max-width: 1280px) {
+  .page__container {
+    padding: 0 70px;
+  }
+}
+@media (max-width: 768px) {
+  .page__container {
+    padding: 0 50px;
+  }
+  .page__container_movies, .page__container_search {
+    padding: 0 30px;
+  }
+  .page__container_header-movies {
+    padding: 0 38px 0 30px;
+  }
+
+  .page__container_about {
+    padding: 0 30px;
+  }
+}
+@media (max-width: 480px) {
+  .page__container {
+    padding: 0 18px;
+  }
+  .page__container_movies {
+    padding: 0 10px;
+  }
+  .page__container_header-movies {
+    padding: 0 23px 0 14px;
+  }
+  .page__container_search {
+    padding: 0 14px;
+  }
+}
+.title {
+  padding-bottom: 23px;
+  border-bottom: 1px solid #000;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 480px) {
+  .title {
+    padding-bottom: 28px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+.logo {
+  width: 38px;
+  height: 38px;
+}
+
+.main {
+  background: #FAFAFA;
+}
+
+@media (max-width: 480px) {
+  .logo_auth {
+    margin: 0 auto;
+  }
+}
+.submit-btn {
+  display: block;
+  background: #3456f3;
+  border-radius: 3px;
+  height: 46px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+  width: 100%;
+  border: 0;
+  outline: none;
+}
+.submit-btn:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.submit-btn_disabled {
+  color: #C2C2C2;
+  background: #F8F8F8;
+}
+
+@media (max-width: 480px) {
+  .submit-btn {
+    font-size: 12px;
+    line-height: 15px;
+    height: 45px;
+  }
+}
+/* Ссылки */
+.links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.links__list {
+  font-weight: 500;
+}
+.links__list:last-child {
+  margin-right: 0;
+}
+.links__list_movies {
+  margin-right: 16px;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.links_movies {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.links_about {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+.link {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  color: #000;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.link:hover {
+  opacity: 0.7;
+}
+
+.link_login {
+  color: #fff;
+  background-color: #3456f3;
+  border-radius: 3px;
+  padding: 8px 20px;
+  margin-left: 30px;
+}
+
+.link_active {
+  font-weight: 500;
+}
+
+.link_account {
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  background-color: #f4f4f4;
+  font-weight: 500;
+}
+
+.link_main {
+  display: none;
+}
+
+.links_aboutme {
+  margin-top: 10px;
+}
+
+.links__list_aboutme {
+  margin-right: 20px;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.links__list_footer {
+  margin-right: 20px;
+}
+
+.link_footer {
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.link_notfound {
+  color: #3456f3;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.link_auth {
+  color: #3456f3;
+}
+
+@media (max-width: 768px) {
+  .links__list_movies {
+    font-weight: 500;
+    font-size: 18px;
+    margin: 0 0 28px;
+  }
+  .links__list_movies:last-child {
+    margin-bottom: 0;
+  }
+
+  .link_main {
+    display: inline-block;
+  }
+
+  .links_movies {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+
+  .link_account {
+    margin-bottom: 90px;
+  }
+
+  .link_active {
+    padding-bottom: 4px;
+    border-bottom: 2px solid #000;
+  }
+}
+@media (max-width: 685px) {
+  .links_aboutme {
+    margin-top: 40px;
+  }
+
+  .links__list_aboutme {
+    margin-right: 26px;
+  }
+}
+@media (max-width: 600px) {
+  .links_footer {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0 auto;
+  }
+
+  .links__list_footer {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  .links__list_footer:last-child {
+    margin-bottom: 0;
+  }
+
+  .link_footer {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .links__list_movies {
+    margin: 0 0 24px;
+  }
+
+  .link_login {
+    margin-left: 14px;
+    padding: 5px 12px;
+  }
+
+  .link_account {
+    margin-bottom: 70px;
+  }
+
+  .link_notfound {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
