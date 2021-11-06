@@ -9,7 +9,7 @@ const SavedMovies = () => {
   //Пропс quanity для верстки временный
 
   return (
-    <>
+    <div className="main">
       <section className="movies">
         <div className="page__container page__container_movies">
           <SearchForm />
@@ -17,7 +17,7 @@ const SavedMovies = () => {
           <MoviesCardList quantity={2} />
         </div>
       </section>
-    </>
+    </div>
   );
 }
 

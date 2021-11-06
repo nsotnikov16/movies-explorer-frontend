@@ -1,19 +1,16 @@
 import "./AuthForm.css";
 import logo from "../../images/logo.svg";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 
-const AuthForm = ({ children, type, setShowHeader, setShowFooter }) => {
-  useEffect(() => {
-    setShowHeader(false)
-    setShowFooter(false)
-  })
+const AuthForm = ({ children, type, hello }) => {
   const check = type === "register";
   return (
     <section className="auth">
       <div className="auth__container">
-        <Link  className="logo_auth" to="/"><img src={logo} alt="Logo" className="logo " /></Link>
-        <h1 className="auth__title">Добро пожаловать!</h1>
+        <Link className="logo_auth" to="/">
+          <img src={logo} alt="Logo" className="logo " />
+        </Link>
+        <h1 className="auth__title">{hello}</h1>
         <form className="auth__form">
           <ul className="auth__rows">{children}</ul>
           <p className="auth__error">Что-то пошло не так...</p>

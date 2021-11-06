@@ -1,11 +1,6 @@
 import "./NotFoundPage.css";
-import {Link} from 'react-router-dom'
-import { useEffect } from "react";
-const NotFoundPage = ({ setShowHeader, setShowFooter}) => {
-  useEffect(() => {
-    setShowHeader(false)
-    setShowFooter(false)
-  })
+import { Link } from "react-router-dom";
+const NotFoundPage = () => {
   return (
     <div className="notfound">
       <div className="notfound__container">
@@ -19,6 +14,6 @@ const NotFoundPage = ({ setShowHeader, setShowFooter}) => {
       </div>
     </div>
   );
-}
+};
 
 export default NotFoundPage;

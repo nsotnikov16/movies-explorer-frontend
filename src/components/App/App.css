@@ -27,6 +27,7 @@ ul {
 
 .page {
   font-family: "Inter";
+  background: #FAFAFA;
 }
 .page__container {
   margin: 0 auto;
@@ -89,9 +90,6 @@ ul {
   height: 38px;
 }
 
-.main {
-  background: #FAFAFA;
-}
 
 @media (max-width: 480px) {
   .logo_auth {
