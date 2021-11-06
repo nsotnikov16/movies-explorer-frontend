@@ -64,7 +64,10 @@ function App() {
               </AuthForm>
             </Route>
             <Route path="/*">
-              <NotFoundPage />
+              <NotFoundPage
+                setShowFooter={setShowFooter}
+                setShowHeader={setShowHeader}
+              />
             </Route>
           </Switch>
         </div>
