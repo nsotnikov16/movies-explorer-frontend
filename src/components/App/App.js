@@ -1,5 +1,5 @@
-import { Route, useLocation, Switch } from "react-router-dom";
-import { useRef } from "react";
+import { Route, Switch } from "react-router-dom";
+import { useRef, useState } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
@@ -11,66 +11,66 @@ import Login from "../Login/Login";
 import Register from "../Register/Register";
 
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import {PageContext} from '../../contexts/PageContext'
+import { PageContext } from "../../contexts/PageContext";
 
 import "./App.css";
 
 function App() {
-  const location = useLocation().pathname;
+  const projectRef = useRef();
+  const techsRef = useRef();
+  const aboutmeRef = useRef();
 
-  const projectRef = useRef()
-  const techsRef = useRef()
-  const aboutmeRef = useRef()
-
-
-  const showHeader = () => {
-    const pages = ["/", "/movies", "/saved-movies", "/profile"];
-    return pages.map((page) => location === page && <Header key={page} />);
-  };
-
-  const showFooter = () => {
-    const pages = ["/", "/movies", "/saved-movies"];
-    return pages.map((page) => location === page && <Footer key={page} />);
-  };
+  const [showHeader, setShowHeader] = useState(true);
+  const [showFooter, setShowFooter] = useState(true);
 
   return (
-     <PageContext.Provider value={{aboutmeRef, projectRef, techsRef}}>
+    <PageContext.Provider value={{ aboutmeRef, projectRef, techsRef }}>
+      <div className="page">
+        {showHeader && <Header />}
+        <div className="main">
+          <Switch>
+            <Route exact path="/">
+              <Main />
+            </Route>
+            <Route path="/movies">
+              <Movies />
+            </Route>
+            <Route path="/saved-movies">
+              <SavedMovies />
+            </Route>
+            <Route path="/profile">
+              <Profile
+                setShowFooter={setShowFooter}
+                name="Никита"
+                email="pochta@yandex.ru"
+              />
+            </Route>
+            <Route path="/sign-in">
+              <AuthForm
+                setShowFooter={setShowFooter}
+                setShowHeader={setShowHeader}
+                type="login"
+              >
+                <Login />
+              </AuthForm>
+            </Route>
+            <Route path="/sign-up">
+              <AuthForm
+                setShowFooter={setShowFooter}
+                setShowHeader={setShowHeader}
+                type="register"
+              >
+                <Register />
+              </AuthForm>
+            </Route>
+            <Route path="/*">
+              <NotFoundPage />
+            </Route>
+          </Switch>
+        </div>
 
-    <div className="page">
-      {showHeader()}
-      <div className="main">
-        <Switch>
-          <Route exact path="/">
-            <Main />
-          </Route>
-          <Route path="/movies">
-            <Movies />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies />
-          </Route>
-          <Route path="/profile">
-            <Profile name="Никита" email="pochta@yandex.ru" />
-          </Route>
-          <Route path="/sign-in">
-            <AuthForm type="login">
-              <Login />
-            </AuthForm>
-          </Route>
-          <Route path="/sign-up">
-            <AuthForm type="register">
-              <Register />
-            </AuthForm>
-          </Route>
-          <Route path="/*">
-            <NotFoundPage />
-          </Route>
-        </Switch>
+        {showFooter && <Footer />}
       </div>
-
-      {showFooter()}
-    </div>
-
     </PageContext.Provider>
   );
 }

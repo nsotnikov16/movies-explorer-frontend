@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Profile.css";
 
-const Profile = ({ name, email }) => {
+const Profile = ({ name, email, setShowFooter }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [userName, setUserName] = useState(name);
   const [userEmail, setUserEmail] = useState(email);
+
+  useEffect(() => {
+    setShowFooter(false)
+  })
 
   const handleChange = ({ target }) => {
     target.name === "name"

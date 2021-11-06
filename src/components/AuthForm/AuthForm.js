@@ -1,8 +1,13 @@
 import "./AuthForm.css";
 import logo from "../../images/logo.svg";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
-const AuthForm = ({ children, type }) => {
+const AuthForm = ({ children, type, setShowHeader, setShowFooter }) => {
+  useEffect(() => {
+    setShowHeader(false)
+    setShowFooter(false)
+  })
   const check = type === "register";
   return (
     <section className="auth">
