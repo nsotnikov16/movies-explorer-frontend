@@ -1,0 +1,68 @@
+/* Поиск фильмов */
+.search {
+  padding: 70px 0 49px;
+}
+.search__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e8e8e8;
+  margin: 0 0 30px;
+}
+.search__icon {
+  width: 34px;
+  height: 34px;
+}
+.search__button {
+  background-image: url(../../images/search-result.svg);
+  background-size: 34px 34px;
+  background-repeat: no-repeat;
+  width: 34px;
+  height: 34px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+.search__button:hover {
+  cursor: pointer;
+}
+.search__input {
+  width: 80%;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 34px;
+  text-align: center;
+  color: #a0a0a0;
+  border: none;
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .search {
+    padding: 86px 0 62px;
+  }
+}
+@media (max-width: 480px) {
+  .search {
+    padding: 94px 0 0px;
+  }
+  .search__container {
+    padding-bottom: 9px;
+    margin: 0 0 43px;
+  }
+  .search__icon {
+    display: none;
+  }
+  .search__input {
+    text-align: left;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

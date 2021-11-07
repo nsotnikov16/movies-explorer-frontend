@@ -1,0 +1,107 @@
+/* Шапка */
+.header {
+  background-color: #FAFAFA;
+  padding: 18px 0;
+}
+.header__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.header__nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 65%;
+}
+.header__links {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.header_about {
+  background-color: #DDDEE3;
+}
+
+@media (min-width: 1280px) {
+  .header__nav {
+    width: 60%;
+  }
+}
+@media (max-width: 768px) {
+  .header__nav {
+    width: auto;
+  }
+  .header__nav .header__links {
+    display: none;
+  }
+  .header__nav_open {
+    position: fixed;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 67%;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    background: #fff;
+    z-index: 999;
+  }
+  .header__nav_open::before {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 67%;
+    bottom: 0;
+    content: "";
+    background: #000;
+    opacity: 0.3;
+  }
+  .header__nav_open .header__links {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%;
+    margin-top: 107px;
+  }
+  .header__nav_open .burger {
+    margin: 22.5px 22.5px 0 auto;
+  }
+}
+@media (max-width: 480px) {
+  .header__nav_open {
+    width: 100%;
+  }
+  .header__nav_open::before {
+    position: static;
+  }
+}

@@ -1,0 +1,54 @@
+/* Фильмы */
+
+.movies__cards {
+  padding: 70px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, -webkit-max-content));
+  grid-template-columns: repeat(auto-fit, minmax(270px, max-content));
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 28px 20px;
+}
+.movies__more {
+  display: block;
+  width: 320px;
+  height: 36px;
+  border: none;
+  outline: none;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  margin: 50px auto 0;
+  border-radius: 6px;
+  background: #f4f4f4;
+}
+.movies__more:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+@media (min-width: 1281px) {
+  .movies__cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .movies__cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .movies__cards {
+    padding: 90px 0 0;
+    grid-template-columns: 1fr;
+  }
+  .movies__more {
+    
+    width: 240px;
+  }
+}
