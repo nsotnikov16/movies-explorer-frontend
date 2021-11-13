@@ -19,6 +19,7 @@ a,
 
 a {
   text-decoration: none;
+  color: black;
 }
 
 ul {
@@ -28,6 +29,7 @@ ul {
 .page {
   font-family: "Inter";
   background: #FAFAFA;
+  height: 100vh;
 }
 .page__container {
   margin: 0 auto;

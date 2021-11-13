@@ -1,8 +1,6 @@
 import "./Techs.css";
-import { PageContext } from "../../contexts/PageContext";
-import { useContext } from "react";
-const Techs = () => {
-  const {techsRef} = useContext(PageContext)
+
+const Techs = ({ techsRef }) => {
   return (
     <section ref={techsRef} className="techs">
       <div className="page__container">
@@ -24,6 +22,6 @@ const Techs = () => {
       </div>
     </section>
   );
-}
+};
 
 export default Techs;

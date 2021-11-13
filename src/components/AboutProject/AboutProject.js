@@ -1,11 +1,10 @@
 import "./AboutProject.css";
-import { PageContext } from "../../contexts/PageContext";
-import { useContext } from "react";
 
-const AboutProject = () => {
-  const {projectRef} = useContext(PageContext)
+
+const AboutProject = ({aboutRef}) => {
+
   return (
-    <section ref={projectRef} className="about ">
+    <section ref={aboutRef} className="about ">
       <div className="page__container">
         <h2 className="title">О проекте</h2>
         <div className="about__description">
