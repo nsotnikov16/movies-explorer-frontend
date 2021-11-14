@@ -1,21 +1,47 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useEffect } from "react/cjs/react.development";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import MainApi from "../../utils/MainApi";
+import Header from "../Header/Header";
 import "./Profile.css";
 
-const Profile = ({ name, email }) => {
+const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-  const [userName, setUserName] = useState(name);
-  const [userEmail, setUserEmail] = useState(email);
+  const [error, setError] = useState('')
+  const [successfully, setSuccessfully] = useState('')
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+
+  useEffect(() => {
+    setUserName(currentUser.name);
+    setUserEmail(currentUser.email);
+  }, [currentUser]);
 
   const handleChange = ({ target }) => {
     target.name === "name"
       ? setUserName(target.value)
       : setUserEmail(target.value);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    MainApi.editProfile(userName, userEmail, localStorage.getItem("jwt")).then(res => {
+      console.log(res)
+      if(res.email) {
+        setIsEdit(false)
+        setSuccessfully('Данные изменены успешно!')
+        return setCurrentUser({name: res.name, email: res.email})
+      }
+    }).catch(err => setError(err));
+  };
   return (
+    <>
+    <Header />
     <section className="profile">
       <div className="profile__container">
-        <h1 className="profile__hello">Привет, {name}!</h1>
-        <form className="profile__form">
+        <h1 className="profile__hello">Привет, {currentUser.name}!</h1>
+        <form onSubmit={handleSubmit} className="profile__form">
           <ul className="profile__rows">
             <li className="profile__row">
               <label htmlFor="name" className="profile__label">
@@ -23,7 +49,7 @@ const Profile = ({ name, email }) => {
               </label>
               <input
                 type="text"
-                onInput={handleChange}
+                onChange={handleChange}
                 autoComplete="off"
                 id="name"
                 disabled={!isEdit}
@@ -38,7 +64,7 @@ const Profile = ({ name, email }) => {
               </label>
               <input
                 type="email"
-                onInput={handleChange}
+                onChange={handleChange}
                 autoComplete="off"
                 id="email"
                 disabled={!isEdit}
@@ -52,10 +78,10 @@ const Profile = ({ name, email }) => {
             <div className="profile__form-down">
               <p
                 className={
-                  `profile__error ` /* profile__error_show (для проверки) */
+                  `profile__message ${error ? 'profile__message_error' : ''} ${successfully ? 'profile__message_successfully' : ''}`
                 }
               >
-                При обновлении профиля произошла ошибка
+                {error || successfully}
               </p>
               <button className="profile__save submit-btn">Сохранить</button>
             </div>
@@ -77,6 +103,7 @@ const Profile = ({ name, email }) => {
         </a>
       </div>
     </section>
+    </>
   );
 };
 

@@ -2,8 +2,9 @@ import "./AuthForm.css";
 import logo from "../../images/logo.svg";
 import { Link } from "react-router-dom";
 
-const AuthForm = ({ children, type, hello }) => {
+const AuthForm = ({ children, type, hello, submitForm, error }) => {
   const check = type === "register";
+
   return (
     <section className="auth">
       <div className="auth__container">
@@ -11,9 +12,9 @@ const AuthForm = ({ children, type, hello }) => {
           <img src={logo} alt="Logo" className="logo " />
         </Link>
         <h1 className="auth__title">{hello}</h1>
-        <form className="auth__form">
+        <form  onSubmit={submitForm} className="auth__form">
           <ul className="auth__rows">{children}</ul>
-          <p className="auth__error">Что-то пошло не так...</p>
+          {error && <p className="auth__error">{error}</p>}
           <button className="auth__button submit-btn">
             {check ? "Зарегистрироваться" : "Войти"}
           </button>

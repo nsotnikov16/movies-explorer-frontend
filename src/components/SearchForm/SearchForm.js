@@ -1,3 +1,4 @@
+import { useLocation } from "react-router";
 import { useState, useRef } from "react/cjs/react.development";
 import search from "../../images/search.svg";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
@@ -5,7 +6,9 @@ import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import "./SearchForm.css";
 
 const SearchForm = ({ searchFilms, setFilms }) => {
+  const location = useLocation().pathname;
   const [error, setError] = useState(null);
+  const type = location === '/movies' ? 'beatfilms' : 'saved';
 
   const searchRef = useRef();
   const checkboxRef = useRef();
@@ -17,7 +20,7 @@ const SearchForm = ({ searchFilms, setFilms }) => {
     if (searchRef.current.value.length < 1)
       return setError("Нужно ввести ключевое слово");
     searchFilms(
-      "beatfilms",
+      type,
       searchRef.current.value,
       checkboxRef.current.checked, setError
     );

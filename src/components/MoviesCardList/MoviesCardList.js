@@ -2,28 +2,31 @@ import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import { editCounter, handleCounter } from "../../utils/utils";
 import { useState, useEffect } from "react/cjs/react.development";
+import { useLocation } from "react-router";
 
 const MoviesCardList = ({ films }) => {
   let [showButtonMore, setShowButtonMore] = useState(false);
   let [counter, setCounter] = useState(null);
+  const location = useLocation().pathname;
 
   const showMoreMovies = (width) => {
     if (counter >= films.length) return setShowButtonMore(false);
-    editCounter(width, setCounter, counter)
+    editCounter(width, setCounter, counter);
   };
 
   useEffect(() => handleCounter(window.innerWidth, setCounter), []);
 
   useEffect(() => {
-    films && films.length > counter
+    location === "/movies" && films && films.length > counter
       ? setShowButtonMore(true)
       : setShowButtonMore(false);
-  }, [films, counter]);
-
+  }, [location, films, counter]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => handleCounter(window.innerWidth, setCounter))
-  })
+    window.addEventListener("resize", () =>
+      handleCounter(window.innerWidth, setCounter)
+    );
+  });
 
   if (!films) return null;
 

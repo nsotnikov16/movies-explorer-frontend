@@ -95,7 +95,7 @@
 .profile__link_hide {
   display: none;
 }
-.profile__error {
+.profile__message {
   position: absolute;
   width: 100%;
   top: -20px;
@@ -109,7 +109,12 @@
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.profile__error_show {
+
+.profile__message_successfully {
+  color: #2BE080;
+}
+
+.profile__message_error, .profile__message_successfully {
   visibility: visible;
   opacity: 1;
   -webkit-transition: all 0.3s ease;

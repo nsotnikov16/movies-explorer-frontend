@@ -1,23 +1,27 @@
 import SearchForm from "../SearchForm/SearchForm";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
-/* import Preloader from '../Preloader/Preloader' */
+import Header from "../Header/Header";
+import Footer from "../Footer/Footer";
+import Preloader from '../Preloader/Preloader'
 
 import "../Movies/Movies.css";
 
-const SavedMovies = () => {
+const SavedMovies = ( {savedMovies, setSavedMovies, isLoading, searchFilms}) => {
   
-  //Пропс quanity для верстки временный
-
   return (
+    <>
+    <Header/>
     <div className="main">
       <section className="movies">
         <div className="page__container page__container_movies">
-          <SearchForm />
-          {/* <Preloader/> */}
-          <MoviesCardList quantity={2} />
+          <SearchForm setFilms={setSavedMovies} searchFilms={searchFilms}/>
+          {isLoading && <Preloader />}
+          <MoviesCardList films={savedMovies} />
         </div>
       </section>
     </div>
+    <Footer/>
+    </>
   );
 }
 
