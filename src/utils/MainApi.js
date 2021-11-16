@@ -23,7 +23,7 @@ export class MainApi {
     }).then(this._handleResponse);
   }
 
-  createMovie(
+  saveMovie(
     token,
     {
       country,
@@ -32,12 +32,10 @@ export class MainApi {
       year,
       description,
       image,
-      trailer,
+      trailerLink,
       nameRU,
       nameEN,
-      thumbnail,
-      movieId,
-      /* owner, */
+      id,
     }
   ) {
     return fetch(`${this._url}/movies`, {
@@ -49,13 +47,12 @@ export class MainApi {
         duration,
         year,
         description,
-        image,
-        trailer,
+        image: `https://api.nomoreparties.co${image.url}`,
+        trailer: trailerLink,
         nameRU,
         nameEN,
-        thumbnail,
-        movieId,
-        /*  owner, */
+        thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
+        movieId: id,
       }),
     }).then(this._handleResponse);
   }

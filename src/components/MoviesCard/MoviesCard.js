@@ -1,12 +1,24 @@
 import "./MoviesCard.css";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-function MoviesCard({ duration, name, src, trailerLink, counter, number }) {
+import  MainApi  from "../../utils/MainApi";
+function MoviesCard({ data, counter, number, src }) {
   const location = useLocation().pathname;
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleLikeCard = () => setIsLiked(!isLiked);
-  const deleteCard = () => {};
+  const handleLikeCard = () => {
+    console.log(data)
+    if(!isLiked) MainApi.saveMovie(localStorage.getItem('jwt'), data).then(res => console.log(res))
+    setIsLiked(!isLiked)
+  };
+  const deleteCard = () => {
+    const jwt = localStorage.getItem('jwt');
+    const saved = localStorage.getItem('saved');
+
+    /* const deleteCardInLocalStorage = (data) */
+    /* console.log(data) */
+    //MainApi.deleteMovie(data._id, jwt).then(res => res ? saved).catch(err => alert(err))
+  };
 
   function getTimeFromMins(mins) {
     let hours = Math.trunc(mins / 60);
@@ -19,9 +31,9 @@ function MoviesCard({ duration, name, src, trailerLink, counter, number }) {
   return (
     <li className={`movies__card ${number <= counter ? "" : 'movies__card_hide'}`}>
       
-      <a target="_blank" href={trailerLink} rel="noreferrer"><img src={src} alt="Movie" className="movies__img" /></a>
+      <a target="_blank" href={data.trailerLink} rel="noreferrer"><img src={src} alt="Movie" className="movies__img" /></a>
         <div className="movies__description">
-        <a target="_blank" href={trailerLink} rel="noreferrer"><p className="movies__name">{name}</p></a>
+        <a target="_blank" href={data.trailerLink} rel="noreferrer"><p className="movies__name">{data.nameRU}</p></a>
           <div
             onClick={location !== "/saved-movies" ? handleLikeCard : deleteCard}
             className={
@@ -31,7 +43,7 @@ function MoviesCard({ duration, name, src, trailerLink, counter, number }) {
             }
           ></div>
         </div>
-        <p className="movies__duration">{getTimeFromMins(duration)}</p>
+        <p className="movies__duration">{getTimeFromMins(data.duration)}</p>
       
     </li>
   );

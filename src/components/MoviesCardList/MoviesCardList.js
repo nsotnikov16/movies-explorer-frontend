@@ -31,16 +31,14 @@ const MoviesCardList = ({ films }) => {
   if (!films) return null;
 
   function moviesItems(films) {
-    return films.map(({ image, duration, nameRU, trailerLink }, index) => {
+    return films.map((data, index) => {
       return (
         <MoviesCard
           key={index}
           number={index + 1}
           counter={counter}
-          name={nameRU}
-          trailerLink={trailerLink}
-          duration={duration}
-          src={`https://api.nomoreparties.co${image.url}`}
+          data={data}
+          src={location === '/saved-movies' ? data.image : `https://api.nomoreparties.co${data.image.url}`}
         />
       );
     });

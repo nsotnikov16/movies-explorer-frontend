@@ -1,4 +1,4 @@
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory, Redirect } from "react-router-dom";
 
 import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
@@ -29,6 +29,12 @@ function App() {
         console.log(data);
         if (data.token) {
           localStorage.setItem("jwt", data.token);
+          MainApi.checkToken(data.token)
+            .then((res) => {
+              setCurrentUser({ name: res.name, email: res.email });
+            })
+            .catch((err) => setError("Что-то пошло не так..."));
+
           setLoggedIn(true);
           history.push("/movies");
         } else {
@@ -44,7 +50,7 @@ function App() {
       if (res.ok) {
         /* setIsRegisterSuccess(true); */
         /* history.push("/sign-in"); */
-        authorization(email, password, setError)
+        authorization(email, password, setError);
       } else {
         /* setIsRegisterSuccess(false); */
       }
@@ -75,7 +81,7 @@ function App() {
     }
   }, []);
 
-/*    useEffect(() => {
+  /*    useEffect(() => {
     if (loggedIn)
       MainApi
         .getInitialCards(localStorage.jwt)
@@ -83,7 +89,7 @@ function App() {
         .catch((err) => console.log(err));
   }, [loggedIn]); */
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
     if (loggedIn)
       api
         .getUserData(localStorage.jwt)
@@ -124,17 +130,17 @@ function App() {
         );
       } else {
         api
-          .getMovies()
-          .then((films) => {
-            localStorage.setItem(nameArrayMovies, JSON.stringify(films));
-            setFilms(filterMovies(films, value, short, setError));
+          .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
+          .then((res) => {
+            console.log(res)
+            localStorage.setItem(nameArrayMovies, JSON.stringify(res));
+            setFilms(filterMovies(res, value, short, setError));
           })
           .catch((err) =>
-            err
-              ? setError(
-                  "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
-                )
-              : ""
+            setError(
+              type === 'saved' ? err : 
+              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+            )
           )
           .finally(() => setIsLoading(false));
       }
@@ -177,17 +183,6 @@ function App() {
             loggedIn={loggedIn}
           />
 
-          {/* <Route path="/saved-movies">
-            <Header />
-            <SavedMovies
-              searchFilms={searchFilms}
-              isLoading={isLoading}
-              setSavedFilms={setSavedFilms}
-              savedFilms={savedFilms}
-            />
-            <Footer />
-          </Route> */}
-
           <ProtectedRoute
             path="/profile"
             loggedIn={loggedIn}
@@ -195,7 +190,11 @@ function App() {
           />
 
           <Route path="/sign-in">
-            <Login authorization={authorization} />
+            {loggedIn ? (
+              <Redirect to="/movies" />
+            ) : (
+              <Login authorization={authorization} />
+            )}
           </Route>
           <Route path="/sign-up">
             <Register registration={registration} />
