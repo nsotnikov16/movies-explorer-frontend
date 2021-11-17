@@ -1,23 +1,54 @@
 import "./MoviesCard.css";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
-import  MainApi  from "../../utils/MainApi";
-function MoviesCard({ data, counter, number, src }) {
+import { useEffect, useState } from "react";
+import MainApi from "../../utils/MainApi";
+function MoviesCard({
+  data,
+  counter,
+  number,
+  src,
+  films,
+  setFilms,
+  savedFilms,
+  setSavedFilms,
+}) {
   const location = useLocation().pathname;
   const [isLiked, setIsLiked] = useState(false);
 
+  useEffect(() => {
+    savedFilms && savedFilms.some((item) => item.nameRU === data.nameRU)
+      ? setIsLiked(true)
+      : setIsLiked(false);
+  }, [savedFilms, data.nameRU]);
+
   const handleLikeCard = () => {
-    console.log(data)
-    if(!isLiked) MainApi.saveMovie(localStorage.getItem('jwt'), data).then(res => console.log(res))
-    setIsLiked(!isLiked)
+    const jwt = localStorage.getItem("jwt");
+    if (!isLiked)
+      MainApi.saveMovie(jwt, data).then((res) => {
+        setSavedFilms([res, ...savedFilms]);
+        setIsLiked(true);
+      });
+
+    if (isLiked) {
+      const currentMovie = savedFilms.find((item) => item.movieId === data.id);
+      MainApi.deleteMovie(currentMovie._id, jwt)
+        .then((res) => {
+          if(res) setSavedFilms(savedFilms.filter((item) => item !== currentMovie));
+        })
+        .catch((err) => console.log(err));
+    }
   };
   const deleteCard = () => {
-    const jwt = localStorage.getItem('jwt');
-    const saved = localStorage.getItem('saved');
-
-    /* const deleteCardInLocalStorage = (data) */
-    /* console.log(data) */
-    //MainApi.deleteMovie(data._id, jwt).then(res => res ? saved).catch(err => alert(err))
+    const jwt = localStorage.getItem("jwt");
+    console.log(data._id);
+    MainApi.deleteMovie(data._id, jwt)
+      .then((res) => {
+        if (res) {
+          setFilms(films.filter((film) => film._id !== data._id));
+          localStorage.setItem("saved", JSON.stringify(films));
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   function getTimeFromMins(mins) {
@@ -29,22 +60,26 @@ function MoviesCard({ data, counter, number, src }) {
   }
 
   return (
-    <li className={`movies__card ${number <= counter ? "" : 'movies__card_hide'}`}>
-      
-      <a target="_blank" href={data.trailerLink} rel="noreferrer"><img src={src} alt="Movie" className="movies__img" /></a>
-        <div className="movies__description">
-        <a target="_blank" href={data.trailerLink} rel="noreferrer"><p className="movies__name">{data.nameRU}</p></a>
-          <div
-            onClick={location !== "/saved-movies" ? handleLikeCard : deleteCard}
-            className={
-              location === "/saved-movies"
-                ? "movies__trash"
-                : `movies__like` + (isLiked ? ` movies__like_liked` : "")
-            }
-          ></div>
-        </div>
-        <p className="movies__duration">{getTimeFromMins(data.duration)}</p>
-      
+    <li
+      className={`movies__card ${number <= counter ? "" : "movies__card_hide"}`}
+    >
+      <a target="_blank" href={data.trailerLink} rel="noreferrer">
+        <img src={src} alt="Movie" className="movies__img" />
+      </a>
+      <div className="movies__description">
+        <a target="_blank" href={data.trailerLink} rel="noreferrer">
+          <p className="movies__name">{data.nameRU}</p>
+        </a>
+        <div
+          onClick={location !== "/saved-movies" ? handleLikeCard : deleteCard}
+          className={
+            location === "/saved-movies"
+              ? "movies__trash"
+              : `movies__like` + (isLiked ? ` movies__like_liked` : "")
+          }
+        ></div>
+      </div>
+      <p className="movies__duration">{getTimeFromMins(data.duration)}</p>
     </li>
   );
 }

@@ -38,6 +38,7 @@ export class MainApi {
       id,
     }
   ) {
+    console.log(nameEN)
     return fetch(`${this._url}/movies`, {
       method: "POST",
       headers: this._headers(token),
@@ -50,7 +51,7 @@ export class MainApi {
         image: `https://api.nomoreparties.co${image.url}`,
         trailer: trailerLink,
         nameRU,
-        nameEN,
+        nameEN: nameEN === '' ? nameRU : nameEN,
         thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
         movieId: id,
       }),

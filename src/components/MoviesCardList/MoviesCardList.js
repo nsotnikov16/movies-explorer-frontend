@@ -4,7 +4,7 @@ import { editCounter, handleCounter } from "../../utils/utils";
 import { useState, useEffect } from "react/cjs/react.development";
 import { useLocation } from "react-router";
 
-const MoviesCardList = ({ films }) => {
+const MoviesCardList = ({ films, setFilms, setSavedFilms, savedFilms }) => {
   let [showButtonMore, setShowButtonMore] = useState(false);
   let [counter, setCounter] = useState(null);
   const location = useLocation().pathname;
@@ -38,6 +38,10 @@ const MoviesCardList = ({ films }) => {
           number={index + 1}
           counter={counter}
           data={data}
+          films = {films}
+          setFilms={setFilms}
+          setSavedFilms={setSavedFilms}
+          savedFilms={savedFilms}
           src={location === '/saved-movies' ? data.image : `https://api.nomoreparties.co${data.image.url}`}
         />
       );

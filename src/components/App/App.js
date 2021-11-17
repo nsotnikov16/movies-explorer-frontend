@@ -58,7 +58,7 @@ function App() {
     /* .then(setIsInfoTooltip(true)); */
   };
 
-  const signOut = (location) => {
+  /* const signOut = (location) => {
     if (location === "/") {
       setLoggedIn(false);
       localStorage.removeItem("jwt");
@@ -66,7 +66,7 @@ function App() {
       localStorage.removeItem("saved");
       history.push("/sign-in");
     }
-  };
+  }; */
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -80,6 +80,36 @@ function App() {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (!loggedIn) return;
+    if (localStorage.saved) {
+      setSavedFilms(JSON.parse(localStorage.saved));
+    } else {
+      MainApi.getMovies(localStorage.getItem("jwt")).then((res) => {
+        setSavedFilms(res);
+        localStorage.setItem("saved", JSON.stringify(res));
+      });
+    }
+  }, [loggedIn]);
+
+  /*   useEffect(() => {
+    if (loggedIn)
+      MainApi.getMovies(localStorage.jwt).then((res) => {
+        if (res) {
+          const newArr = () => {
+            return beatfilms.map((item) =>
+              res.some((itemRes) => itemRes.movieId === item.movieId)
+                ? { saved: true, ...item }
+                : { saved: false, ...item }
+            );
+          };
+          console.log(newArr());
+          setBeatfilms(() => newArr());
+        }
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); */
 
   /*    useEffect(() => {
     if (loggedIn)
@@ -120,6 +150,7 @@ function App() {
       const setFilms = api === MoviesApi ? setBeatfilms : setSavedFilms;
       if (localStorage.getItem(nameArrayMovies)) {
         setIsLoading(false);
+
         setFilms(
           filterMovies(
             JSON.parse(localStorage.getItem(nameArrayMovies)),
@@ -128,18 +159,19 @@ function App() {
             setError
           )
         );
+
       } else {
         api
           .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
           .then((res) => {
-            console.log(res)
             localStorage.setItem(nameArrayMovies, JSON.stringify(res));
             setFilms(filterMovies(res, value, short, setError));
           })
           .catch((err) =>
             setError(
-              type === 'saved' ? err : 
-              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+              type === "saved"
+                ? err
+                : "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
             )
           )
           .finally(() => setIsLoading(false));
@@ -147,6 +179,7 @@ function App() {
     };
 
     if (type === "beatfilms") getFilms(MoviesApi);
+
     if (type === "saved") getFilms(MainApi);
   };
 
@@ -171,6 +204,8 @@ function App() {
             setBeatfilms={setBeatfilms}
             beatfilms={beatfilms}
             loggedIn={loggedIn}
+            setSavedFilms={setSavedFilms}
+            savedFilms={savedFilms}
           />
 
           <ProtectedRoute
