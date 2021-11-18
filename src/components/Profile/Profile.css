@@ -1,6 +1,7 @@
 /* Профиль */
 .profile {
   padding: 74px 0 100%;
+  background: inherit;
 }
 .profile__container {
   max-width: 410px;
@@ -75,7 +76,9 @@
   background: transparent;
 }
 .profile__edit {
-  margin: 220px 0 0;
+  width: 100%;
+  margin: 0 auto;
+  /* margin: 220px 0 0; */
   border: 0;
   outline: none;
   background: transparent;
@@ -132,9 +135,9 @@
   .profile__form-down {
     margin: 213px 0 0;
   }
-  .profile__edit {
+/*   .profile__edit {
     margin: 210px 0 0;
-  }
+  } */
 }
 @media (max-width: 480px) {
   .profile {
@@ -147,7 +150,7 @@
     margin: 369px 0 0;
   }
   .profile__edit {
-    margin: 379px 0 0;
+    /* margin: 379px 0 0; */
     font-size: 12px;
     line-height: 15px;
   }

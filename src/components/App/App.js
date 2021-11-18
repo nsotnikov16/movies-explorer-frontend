@@ -23,10 +23,10 @@ function App() {
 
   const history = useHistory();
 
-  const authorization = (email, password, setError) => {
+  const authorization = (email, password, setError, resetForm) => {
+    localStorage.clear();
     MainApi.authorize(email, password)
       .then((data) => {
-        console.log(data);
         if (data.token) {
           localStorage.setItem("jwt", data.token);
           MainApi.checkToken(data.token)
@@ -41,38 +41,31 @@ function App() {
           setError(data.message);
         }
       })
-      .catch((err) => setError("Что-то пошло не так..."));
+      .catch((err) => setError("Что-то пошло не так..."))
+      .finally(resetForm);
   };
 
-  const registration = (email, password, name, setError) => {
-    MainApi.register(email, password, name).then((res) => {
-      console.log(res);
-      if (res.ok) {
-        /* setIsRegisterSuccess(true); */
-        /* history.push("/sign-in"); */
-        authorization(email, password, setError);
-      } else {
-        /* setIsRegisterSuccess(false); */
-      }
-    });
-    /* .then(setIsInfoTooltip(true)); */
+  const registration = (email, password, name, setError, resetForm) => {
+    MainApi.register(email, password, name)
+      .then((res) => {
+        if (res) return authorization(email, password, setError);
+      })
+      .catch((err) => setError(err))
+      .finally(resetForm);
   };
 
-  /* const signOut = (location) => {
-    if (location === "/") {
-      setLoggedIn(false);
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("beatfilms");
-      localStorage.removeItem("saved");
-      history.push("/sign-in");
-    }
-  }; */
+  const signOut = () => {
+    setLoggedIn(false);
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("beatfilms");
+    localStorage.removeItem("saved");
+    history.push("/");
+  };
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       MainApi.checkToken(jwt).then((res) => {
-        console.log(res);
         if (res) {
           setLoggedIn(true);
           setCurrentUser({ name: res.name, email: res.email });
@@ -92,40 +85,6 @@ function App() {
       });
     }
   }, [loggedIn]);
-
-  /*   useEffect(() => {
-    if (loggedIn)
-      MainApi.getMovies(localStorage.jwt).then((res) => {
-        if (res) {
-          const newArr = () => {
-            return beatfilms.map((item) =>
-              res.some((itemRes) => itemRes.movieId === item.movieId)
-                ? { saved: true, ...item }
-                : { saved: false, ...item }
-            );
-          };
-          console.log(newArr());
-          setBeatfilms(() => newArr());
-        }
-      });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); */
-
-  /*    useEffect(() => {
-    if (loggedIn)
-      MainApi
-        .getInitialCards(localStorage.jwt)
-        .then((cardsData) => setCards(cardsData))
-        .catch((err) => console.log(err));
-  }, [loggedIn]); */
-
-  /*   useEffect(() => {
-    if (loggedIn)
-      api
-        .getUserData(localStorage.jwt)
-        .then((userdata) => setCurrentUser(userdata))
-        .catch((err) => console.log(err));
-  }, [loggedIn]); */
 
   const filterMovies = (films, value, short, setError) => {
     const ent = (item, value) =>
@@ -159,7 +118,6 @@ function App() {
             setError
           )
         );
-
       } else {
         api
           .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
@@ -222,6 +180,7 @@ function App() {
             path="/profile"
             loggedIn={loggedIn}
             component={Profile}
+            signOut={signOut}
           />
 
           <Route path="/sign-in">

@@ -1,33 +1,47 @@
-import { useState } from "react/cjs/react.development";
+import { useState, useCallback } from "react/cjs/react.development";
 import AuthForm from "../AuthForm/AuthForm";
+import { handleChange } from "../../utils/utils";
 
-const Login = ({authorization}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState('');
+const Login = ({ authorization }) => {
+  const [values, setValues] = useState({ name: "", password: "", email: "" });
+  const [error, setError] = useState("");
+  const [errorsValidation, setErrorsValidation] = useState({});
+  const [isValid, setIsValid] = useState(false);
 
-  const handleChange = ({ target }) => {
-    if (target.name === "email") setEmail(target.value);
-    if (target.name === "password") setPassword(target.value);
-  };
+  const resetForm = useCallback(
+    (
+      newValues = { name: "", password: "", email: "" },
+      newErrors = {},
+      newIsValid = false
+    ) => {
+      setValues(newValues);
+      setErrorsValidation(newErrors);
+      setTimeout(() => setError(""), 1500);
+      setIsValid(newIsValid);
+    },
+    [setValues, setErrorsValidation, setIsValid]
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!values.email || !values.password) {
       return;
     }
-    authorization(email, password, setError);
+    authorization(values.email, values.password, setError, resetForm);
   };
-
 
   return (
     <AuthForm
-      email={email}
-      password={password}
+      email={values.email}
+      password={values.password}
       hello="Рады видеть!"
       type="login"
       error={error}
       submitForm={handleSubmit}
+      setError={setError}
+      isValid={isValid}
+      errorsValidation={errorsValidation}
+      setErrorsValidation={setErrorsValidation}
     >
       <li className="auth__row">
         <label htmlFor="email" className="auth__label">
@@ -42,8 +56,17 @@ const Login = ({authorization}) => {
           minLength="3"
           maxLength="50"
           className="auth__input"
-          value={email}
-          onChange={handleChange}
+          value={values.email}
+          onChange={(e) =>
+            handleChange(
+              e,
+              errorsValidation,
+              setErrorsValidation,
+              setIsValid,
+              values,
+              setValues
+            )
+          }
         />
       </li>
       <li className="auth__row">
@@ -59,8 +82,17 @@ const Login = ({authorization}) => {
           minLength="3"
           maxLength="15"
           className="auth__input"
-          value={password}
-          onChange={handleChange}
+          value={values.password}
+          onChange={(e) =>
+            handleChange(
+              e,
+              errorsValidation,
+              setErrorsValidation,
+              setIsValid,
+              values,
+              setValues
+            )
+          }
         />
       </li>
     </AuthForm>

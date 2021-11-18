@@ -38,7 +38,7 @@ export class MainApi {
       id,
     }
   ) {
-    console.log(nameEN)
+    console.log(nameEN);
     return fetch(`${this._url}/movies`, {
       method: "POST",
       headers: this._headers(token),
@@ -51,7 +51,7 @@ export class MainApi {
         image: `https://api.nomoreparties.co${image.url}`,
         trailer: trailerLink,
         nameRU,
-        nameEN: nameEN === '' ? nameRU : nameEN,
+        nameEN: nameEN === "" ? nameRU : nameEN,
         thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
         movieId: id,
       }),
@@ -73,7 +73,7 @@ export class MainApi {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password, name }),
-    });
+    }).then(this._handleResponse);
   };
 
   editProfile(name, email, token) {

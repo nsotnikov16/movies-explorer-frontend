@@ -1,24 +1,39 @@
-import { useState } from "react/cjs/react.development";
+import { useState, useCallback } from "react/cjs/react.development";
 import AuthForm from "../AuthForm/AuthForm";
+import { handleChange } from "../../utils/utils";
 
 const Register = ({ registration }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [values, setValues] = useState({ name: "", password: "", email: "" });
   const [error, setError] = useState("");
+  const [errorsValidation, setErrorsValidation] = useState({});
+  const [isValid, setIsValid] = useState(false);
 
-  const handleChange = ({ target }) => {
-    if (target.name === "email") setEmail(target.value);
-    if (target.name === "password") setPassword(target.value);
-    if (target.name === "name") setName(target.value);
-  };
+  const resetForm = useCallback(
+    (
+      newValues = { name: "", password: "", email: "" },
+      newErrors = {},
+      newIsValid = false
+    ) => {
+      setValues(newValues);
+      setErrorsValidation(newErrors);
+      setTimeout(() => setError(""), 2500);
+      setIsValid(newIsValid);
+    },
+    [setValues, setErrorsValidation, setIsValid]
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password || !name) {
+    if (!values.email || !values.password || !values.name) {
       return;
     }
-    registration(email, password, name, setError);
+    registration(
+      values.email,
+      values.password,
+      values.name,
+      setError,
+      resetForm
+    );
   };
 
   return (
@@ -27,6 +42,10 @@ const Register = ({ registration }) => {
       hello="Добро пожаловать!"
       type="register"
       error={error}
+      setError={setError}
+      isValid={isValid}
+      errorsValidation={errorsValidation}
+      setErrorsValidation={setErrorsValidation}
     >
       <li className="auth__row">
         <label htmlFor="name" className="auth__label">
@@ -39,10 +58,19 @@ const Register = ({ registration }) => {
           name="name"
           autoComplete="off"
           minLength="3"
-          maxLength="15"
+          maxLength="30"
           className="auth__input"
-          value={name}
-          onChange={handleChange}
+          value={values.name}
+          onChange={(e) =>
+            handleChange(
+              e,
+              errorsValidation,
+              setErrorsValidation,
+              setIsValid,
+              values,
+              setValues
+            )
+          }
         />
       </li>
       <li className="auth__row">
@@ -56,10 +84,19 @@ const Register = ({ registration }) => {
           name="email"
           autoComplete="off"
           minLength="3"
-          maxLength="15"
+          maxLength="30"
           className="auth__input"
-          value={email}
-          onChange={handleChange}
+          value={values.email}
+          onChange={(e) =>
+            handleChange(
+              e,
+              errorsValidation,
+              setErrorsValidation,
+              setIsValid,
+              values,
+              setValues
+            )
+          }
         />
       </li>
       <li className="auth__row">
@@ -75,8 +112,17 @@ const Register = ({ registration }) => {
           minLength="3"
           maxLength="15"
           className="auth__input auth__input_error"
-          value={password}
-          onChange={handleChange}
+          value={values.password}
+          onChange={(e) =>
+            handleChange(
+              e,
+              errorsValidation,
+              setErrorsValidation,
+              setIsValid,
+              values,
+              setValues
+            )
+          }
         />
       </li>
     </AuthForm>

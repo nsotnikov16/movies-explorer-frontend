@@ -5,10 +5,11 @@ import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 
 import "./SearchForm.css";
 
-const SearchForm = ({ searchFilms, setFilms }) => {
+const SearchForm = ({ searchFilms, setFilms, films }) => {
   const location = useLocation().pathname;
   const [error, setError] = useState(null);
-  const type = location === '/movies' ? 'beatfilms' : 'saved';
+  const [savedAfterFilterMovies, setSavedAfterFilterMovies] = useState([]);
+  const type = location === "/movies" ? "beatfilms" : "saved";
 
   const searchRef = useRef();
   const checkboxRef = useRef();
@@ -22,8 +23,26 @@ const SearchForm = ({ searchFilms, setFilms }) => {
     searchFilms(
       type,
       searchRef.current.value,
-      checkboxRef.current.checked, setError
+      checkboxRef.current.checked,
+      setError
     );
+  };
+
+  const filterResult = () => {
+    console.log(searchRef.current.value);
+
+    if (films && (films.length > 0 || !films.length)) {
+      searchFilms(
+        type,
+        searchRef.current.value,
+        checkboxRef.current.checked,
+        setError
+      );
+
+      setSavedAfterFilterMovies([...films]);
+    } else {
+      setFilms([...savedAfterFilterMovies]);
+    }
   };
   return (
     <div className="search ">
@@ -42,7 +61,7 @@ const SearchForm = ({ searchFilms, setFilms }) => {
           <button className="search__button"></button>
         </div>
 
-        <FilterCheckbox checkboxRef={checkboxRef} />
+        <FilterCheckbox filterResult={filterResult} checkboxRef={checkboxRef} />
 
         {error && <p className="search__error">{error}</p>}
       </form>

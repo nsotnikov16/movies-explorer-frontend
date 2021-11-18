@@ -7,17 +7,23 @@ import Preloader from "../Preloader/Preloader";
 import "../Movies/Movies.css";
 
 const SavedMovies = ({ savedFilms, setSavedFilms, isLoading, searchFilms }) => {
-  
-
   return (
     <>
       <Header />
       <div className="main">
         <section className="movies">
           <div className="page__container page__container_movies">
-            <SearchForm setFilms={setSavedFilms} searchFilms={searchFilms} />
+            <SearchForm
+              films={savedFilms}
+              setFilms={setSavedFilms}
+              searchFilms={searchFilms}
+            />
             {isLoading && <Preloader />}
-            <MoviesCardList setSavedFilms={setSavedFilms} setFilms={setSavedFilms} films={savedFilms} />
+            <MoviesCardList
+              setSavedFilms={setSavedFilms}
+              setFilms={setSavedFilms}
+              films={savedFilms}
+            />
           </div>
         </section>
       </div>

@@ -112,7 +112,7 @@ ul {
   border: 0;
   outline: none;
 }
-.submit-btn:hover {
+.submit-btn:hover:not(.submit-btn_disabled) {
   cursor: pointer;
   opacity: 0.8;
 }
@@ -120,7 +120,10 @@ ul {
 .submit-btn_disabled {
   color: #C2C2C2;
   background: #F8F8F8;
+  cursor: not-allowed;
 }
+
+
 
 @media (max-width: 480px) {
   .submit-btn {

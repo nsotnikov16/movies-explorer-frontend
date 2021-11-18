@@ -1,15 +1,17 @@
 import "./Navigation.css";
 import Burger from "../Burger/Burger";
 import { useState } from "react";
-import {Link, NavLink} from 'react-router-dom'
+import { Link, NavLink } from "react-router-dom";
 
 const Navigation = () => {
-
-const [isOpenMenu, setIsOpenMenu] = useState(false)
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   return (
-    <nav className={`header__nav ${isOpenMenu ? 'header__nav_open' : ''}`}>
-      <Burger isOpen={isOpenMenu} toggleMenu={() => setIsOpenMenu(!isOpenMenu)}/>
+    <nav className={`header__nav ${isOpenMenu ? "header__nav_open" : ""}`}>
+      <Burger
+        isOpen={isOpenMenu}
+        toggleMenu={() => setIsOpenMenu(!isOpenMenu)}
+      />
       <div className="header__links">
         <ul className="links links_movies">
           <li className="links__list links__list_movies">
@@ -18,12 +20,20 @@ const [isOpenMenu, setIsOpenMenu] = useState(false)
             </NavLink>
           </li>
           <li className="links__list links__list_movies">
-            <NavLink to="/movies" activeClassName="link_active" className="link">
+            <NavLink
+              to="/movies"
+              activeClassName="link_active"
+              className="link"
+            >
               Фильмы
             </NavLink>
           </li>
           <li className="links__list links__list_movies">
-            <NavLink to="/saved-movies" activeClassName="link_active" className="link">
+            <NavLink
+              to="/saved-movies"
+              activeClassName="link_active"
+              className="link"
+            >
               Сохраненные фильмы
             </NavLink>
           </li>
@@ -34,6 +44,6 @@ const [isOpenMenu, setIsOpenMenu] = useState(false)
       </div>
     </nav>
   );
-}
+};
 
 export default Navigation;
