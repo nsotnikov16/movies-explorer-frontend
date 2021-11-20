@@ -1,2 +1,2 @@
 # movies-explorer-frontend
-* [Ссылка на проект](https://https://sotnikov.nomoredomains.rocks/)
+* [Ссылка на проект](https://sotnikov.nomoredomains.rocks/)
