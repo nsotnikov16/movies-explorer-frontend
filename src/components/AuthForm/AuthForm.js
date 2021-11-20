@@ -10,8 +10,6 @@ const AuthForm = ({
   error,
   isValid,
   errorsValidation,
-  setError,
-  setErrorsValidation,
 }) => {
   const check = type === "register";
 

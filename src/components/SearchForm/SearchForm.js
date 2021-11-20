@@ -1,5 +1,5 @@
 import { useLocation } from "react-router";
-import { useState, useRef } from "react/cjs/react.development";
+import { useState, useRef } from "react";
 import search from "../../images/search.svg";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 
@@ -29,7 +29,6 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
   };
 
   const filterResult = () => {
-    console.log(searchRef.current.value);
 
     if (films && (films.length > 0 || !films.length)) {
       searchFilms(

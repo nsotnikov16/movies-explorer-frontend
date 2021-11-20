@@ -1,26 +1,17 @@
-import { useState, useCallback } from "react/cjs/react.development";
+import { useState } from "react";
+import { useFormWithValidation } from "../ValidationForm/ValidationForm";
 import AuthForm from "../AuthForm/AuthForm";
-import { handleChange } from "../../utils/utils";
 
 const Register = ({ registration }) => {
-  const [values, setValues] = useState({ name: "", password: "", email: "" });
   const [error, setError] = useState("");
-  const [errorsValidation, setErrorsValidation] = useState({});
-  const [isValid, setIsValid] = useState(false);
-
-  const resetForm = useCallback(
-    (
-      newValues = { name: "", password: "", email: "" },
-      newErrors = {},
-      newIsValid = false
-    ) => {
-      setValues(newValues);
-      setErrorsValidation(newErrors);
-      setTimeout(() => setError(""), 2500);
-      setIsValid(newIsValid);
-    },
-    [setValues, setErrorsValidation, setIsValid]
-  );
+  const {
+    values,
+    handleChange,
+    errorsValidation,
+    setErrorsValidation,
+    isValid,
+    resetForm,
+  } = useFormWithValidation(setError);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,16 +52,7 @@ const Register = ({ registration }) => {
           maxLength="30"
           className="auth__input"
           value={values.name}
-          onChange={(e) =>
-            handleChange(
-              e,
-              errorsValidation,
-              setErrorsValidation,
-              setIsValid,
-              values,
-              setValues
-            )
-          }
+          onChange={handleChange}
         />
       </li>
       <li className="auth__row">
@@ -87,16 +69,7 @@ const Register = ({ registration }) => {
           maxLength="30"
           className="auth__input"
           value={values.email}
-          onChange={(e) =>
-            handleChange(
-              e,
-              errorsValidation,
-              setErrorsValidation,
-              setIsValid,
-              values,
-              setValues
-            )
-          }
+          onChange={handleChange}
         />
       </li>
       <li className="auth__row">
@@ -113,16 +86,7 @@ const Register = ({ registration }) => {
           maxLength="15"
           className="auth__input auth__input_error"
           value={values.password}
-          onChange={(e) =>
-            handleChange(
-              e,
-              errorsValidation,
-              setErrorsValidation,
-              setIsValid,
-              values,
-              setValues
-            )
-          }
+          onChange={handleChange}
         />
       </li>
     </AuthForm>

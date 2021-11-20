@@ -1,46 +1,36 @@
 import { useState, useContext } from "react";
-import { useEffect } from "react/cjs/react.development";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { useFormWithValidation } from "../ValidationForm/ValidationForm";
 import MainApi from "../../utils/MainApi";
 import Header from "../Header/Header";
 import "./Profile.css";
 
 const Profile = ({ signOut }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [error, setError] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+
   const [successfully, setSuccessfully] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    setUserName(currentUser.name);
-    setUserEmail(currentUser.email);
-  }, [currentUser]);
-
-  useEffect(() => {
-    userName === currentUser.name && userEmail === currentUser.email
-      ? setIsDisabled(true)
-      : setIsDisabled(false);
-  }, [isDisabled, currentUser, userEmail, userName]);
+  const {
+    values,
+    handleChange,
+    errorsValidation,
+    isValid,
+    setIsValid,
+    resetForm,
+  } = useFormWithValidation(setError, currentUser);
+  const check = isEdit && !isValid;
 
   const clearMessage = () => {
     setSuccessfully("");
     setError("");
   };
 
-  const handleChange = ({ target }) => {
-    target.name === "name"
-      ? setUserName(target.value)
-      : setUserEmail(target.value);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(e);
-    setIsDisabled(true);
-    MainApi.editProfile(userName, userEmail, localStorage.getItem("jwt"))
+    setIsValid(false);
+    MainApi.editProfile(values.name, values.email, localStorage.getItem("jwt"))
       .then((res) => {
         if (res.email) {
           setSuccessfully("Данные изменены успешно!");
@@ -51,8 +41,8 @@ const Profile = ({ signOut }) => {
       })
       .catch((err) => setError(err))
       .finally(() => {
-        setIsDisabled(false);
         setTimeout(() => clearMessage(), 3000);
+        resetForm();
       });
   };
   return (
@@ -73,7 +63,10 @@ const Profile = ({ signOut }) => {
                   autoComplete="off"
                   id="name"
                   disabled={!isEdit}
-                  value={userName}
+                  value={values.name}
+                  required
+                  minLength="3"
+                  maxLength="30"
                   name="name"
                   className="profile__input"
                 />
@@ -84,16 +77,33 @@ const Profile = ({ signOut }) => {
                 </label>
                 <input
                   type="email"
+                  required
                   onChange={handleChange}
                   autoComplete="off"
                   id="email"
                   disabled={!isEdit}
-                  value={userEmail}
+                  value={values.email}
                   name="email"
+                  minLength="3"
+                  maxLength="30"
                   className="profile__input"
                 />
               </li>
             </ul>
+            {errorsValidation &&
+            Object.values(errorsValidation).filter((item) => item !== "")
+              .length > 0
+              ? Object.entries(errorsValidation).map((item, ind) => {
+                  if (item[1] === "") item[0] = "";
+                  if (item[0] === "email") item[0] = "Email:";
+                  if (item[0] === "name") item[0] = "Имя:";
+                  return (
+                    <p key={ind} className="profile__error-validation">
+                      {`${item[0]} ${item[1]}`}
+                    </p>
+                  );
+                })
+              : ""}
 
             <div className="profile__form-down">
               <p
@@ -106,9 +116,9 @@ const Profile = ({ signOut }) => {
 
               {isEdit ? (
                 <button
-                  disabled={isDisabled}
+                  disabled={!isValid}
                   className={`profile__save submit-btn ${
-                    isDisabled ? "submit-btn_disabled" : ""
+                    !isValid ? "submit-btn_disabled" : ""
                   }`}
                 >
                   Сохранить
@@ -117,7 +127,11 @@ const Profile = ({ signOut }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    setTimeout(() => setIsEdit(!isEdit), 100);
+                    setTimeout(() => {
+                      setIsEdit(!isEdit);
+                      /*  setIsValid(false); */
+                    }, 100);
+
                     clearMessage();
                   }}
                   className="profile__edit"
@@ -127,12 +141,23 @@ const Profile = ({ signOut }) => {
               )}
             </div>
           </form>
+
           <a
             href="/"
-            className={`profile__link ${isEdit ? "profile__link_hide" : ""}`}
-            onClick={signOut}
+            className={`profile__link  ${
+              isEdit && isValid ? "profile__link_hide" : ""
+            }`}
+            onClick={(e) => {
+              if (check) {
+                e.preventDefault();
+
+                setIsEdit(false);
+                return;
+              }
+              signOut();
+            }}
           >
-            Выйти из аккаунта
+            {check ? "Отменить" : "Выйти из аккаунта"}
           </a>
         </div>
       </section>

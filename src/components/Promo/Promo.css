@@ -33,6 +33,7 @@
     bottom: 30%;
     width: 320px;
     height: 320px;
+    background: transparent;
   }
   
   @media (max-width: 768px) {

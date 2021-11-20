@@ -1,26 +1,17 @@
-import { useState, useCallback } from "react/cjs/react.development";
+import { useState } from "react";
 import AuthForm from "../AuthForm/AuthForm";
-import { handleChange } from "../../utils/utils";
+import { useFormWithValidation } from "../ValidationForm/ValidationForm";
 
 const Login = ({ authorization }) => {
-  const [values, setValues] = useState({ name: "", password: "", email: "" });
   const [error, setError] = useState("");
-  const [errorsValidation, setErrorsValidation] = useState({});
-  const [isValid, setIsValid] = useState(false);
-
-  const resetForm = useCallback(
-    (
-      newValues = { name: "", password: "", email: "" },
-      newErrors = {},
-      newIsValid = false
-    ) => {
-      setValues(newValues);
-      setErrorsValidation(newErrors);
-      setTimeout(() => setError(""), 1500);
-      setIsValid(newIsValid);
-    },
-    [setValues, setErrorsValidation, setIsValid]
-  );
+  const {
+    values,
+    handleChange,
+    errorsValidation,
+    setErrorsValidation,
+    isValid,
+    resetForm,
+  } = useFormWithValidation(setError);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +20,6 @@ const Login = ({ authorization }) => {
     }
     authorization(values.email, values.password, setError, resetForm);
   };
-
   return (
     <AuthForm
       email={values.email}
@@ -57,16 +47,7 @@ const Login = ({ authorization }) => {
           maxLength="50"
           className="auth__input"
           value={values.email}
-          onChange={(e) =>
-            handleChange(
-              e,
-              errorsValidation,
-              setErrorsValidation,
-              setIsValid,
-              values,
-              setValues
-            )
-          }
+          onChange={handleChange}
         />
       </li>
       <li className="auth__row">
@@ -83,16 +64,7 @@ const Login = ({ authorization }) => {
           maxLength="15"
           className="auth__input"
           value={values.password}
-          onChange={(e) =>
-            handleChange(
-              e,
-              errorsValidation,
-              setErrorsValidation,
-              setIsValid,
-              values,
-              setValues
-            )
-          }
+          onChange={handleChange}
         />
       </li>
     </AuthForm>

@@ -1,7 +1,7 @@
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import { editCounter, handleCounter } from "../../utils/utils";
-import { useState, useEffect } from "react/cjs/react.development";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
 const MoviesCardList = ({ films, setFilms, setSavedFilms, savedFilms }) => {

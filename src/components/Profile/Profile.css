@@ -1,6 +1,6 @@
 /* Профиль */
 .profile {
-  padding: 74px 0 100%;
+  padding: 74px 0 0;
   background: inherit;
 }
 .profile__container {
@@ -44,6 +44,11 @@
   margin: 223px 0 0;
   position: relative;
 }
+
+.profile__save {
+  margin-top: -25px;
+}
+
 .profile__row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -60,6 +65,14 @@
   line-height: 13px;
   margin-bottom: 17px;
 }
+
+.profile__error-validation {
+  padding-top: 10px;
+  color: #ff004c;
+  font-size: 11px;
+  line-height: 13px;
+}
+
 .profile__row:last-child {
   padding-bottom: 0;
   border-bottom: 0;
@@ -127,7 +140,7 @@
 
 @media (max-width: 768px) {
   .profile {
-    padding: 236px 0 100%;
+    padding: 236px 0 0;
   }
   .profile__hello {
     margin: 0 0 96px;

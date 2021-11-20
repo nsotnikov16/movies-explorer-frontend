@@ -40,7 +40,6 @@ function MoviesCard({
   };
   const deleteCard = () => {
     const jwt = localStorage.getItem("jwt");
-    console.log(data._id);
     MainApi.deleteMovie(data._id, jwt)
       .then((res) => {
         if (res) {

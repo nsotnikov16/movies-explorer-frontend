@@ -1,4 +1,10 @@
-import { Route, Switch, useHistory, Redirect } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  useHistory,
+  Redirect,
+  useLocation,
+} from "react-router-dom";
 
 import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
@@ -12,7 +18,7 @@ import NotFoundPage from "../NotFoundPage/NotFoundPage";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./App.css";
-import { useState, useEffect } from "react/cjs/react.development";
+import { useState, useEffect } from "react";
 
 function App() {
   const [beatfilms, setBeatfilms] = useState([]);
@@ -20,8 +26,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: "", email: "" });
-
   const history = useHistory();
+  const location = useLocation.pathname;
 
   const authorization = (email, password, setError, resetForm) => {
     localStorage.clear();
@@ -75,16 +81,18 @@ function App() {
   }, []);
 
   useEffect(() => {
+    let cleanupFunction = false;
     if (!loggedIn) return;
     if (localStorage.saved) {
       setSavedFilms(JSON.parse(localStorage.saved));
-    } else {
+    } else if (location === "/movies" || location === "/saved-movies") {
       MainApi.getMovies(localStorage.getItem("jwt")).then((res) => {
-        setSavedFilms(res);
+        if(!cleanupFunction) setSavedFilms(res);
         localStorage.setItem("saved", JSON.stringify(res));
       });
     }
-  }, [loggedIn]);
+    return () => cleanupFunction = true;
+  }, [loggedIn, location]);
 
   const filterMovies = (films, value, short, setError) => {
     const ent = (item, value) =>
@@ -187,7 +195,7 @@ function App() {
             {loggedIn ? (
               <Redirect to="/movies" />
             ) : (
-              <Login authorization={authorization} />
+              <Login authorization={authorization} loggedIn={loggedIn} />
             )}
           </Route>
           <Route path="/sign-up">
