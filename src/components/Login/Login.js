@@ -10,6 +10,7 @@ const Login = ({ authorization }) => {
     errorsValidation,
     setErrorsValidation,
     isValid,
+    setIsValid,
     resetForm,
   } = useFormWithValidation(setError);
 
@@ -18,6 +19,7 @@ const Login = ({ authorization }) => {
     if (!values.email || !values.password) {
       return;
     }
+    setIsValid(false);
     authorization(values.email, values.password, setError, resetForm);
   };
   return (
@@ -48,6 +50,7 @@ const Login = ({ authorization }) => {
           className="auth__input"
           value={values.email}
           onChange={handleChange}
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
         />
       </li>
       <li className="auth__row">

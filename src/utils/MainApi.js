@@ -42,7 +42,7 @@ export class MainApi {
       method: "POST",
       headers: this._headers(token),
       body: JSON.stringify({
-        country,
+        country: country || 'unknown',
         director,
         duration,
         year,
@@ -50,7 +50,7 @@ export class MainApi {
         image: `https://api.nomoreparties.co${image.url}`,
         trailer: trailerLink,
         nameRU,
-        nameEN: nameEN === "" ? nameRU : nameEN,
+        nameEN: !nameEN || nameEN === "" ? nameRU : nameEN,
         thumbnail: `https://api.nomoreparties.co${image.formats.thumbnail.url}`,
         movieId: id,
       }),

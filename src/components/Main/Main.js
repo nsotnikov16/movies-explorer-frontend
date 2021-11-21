@@ -8,14 +8,14 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Portfolio from "../Portfolio/Portfolio";
 
-const Main = () => {
+const Main = ({loggedIn}) => {
   const projectRef = useRef();
   const techsRef = useRef();
   const aboutmeRef = useRef();
 
   return (
     <>
-      <Header />
+      <Header loggedIn={loggedIn}/>
       <div className="main">
         <Promo />
         <NavTab refs={{ projectRef, techsRef, aboutmeRef }} />

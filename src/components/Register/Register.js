@@ -10,6 +10,7 @@ const Register = ({ registration }) => {
     errorsValidation,
     setErrorsValidation,
     isValid,
+    setIsValid,
     resetForm,
   } = useFormWithValidation(setError);
 
@@ -18,6 +19,7 @@ const Register = ({ registration }) => {
     if (!values.email || !values.password || !values.name) {
       return;
     }
+    setIsValid(false);
     registration(
       values.email,
       values.password,
@@ -70,6 +72,7 @@ const Register = ({ registration }) => {
           className="auth__input"
           value={values.email}
           onChange={handleChange}
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
         />
       </li>
       <li className="auth__row">

@@ -1,10 +1,4 @@
-import {
-  Route,
-  Switch,
-  useHistory,
-  Redirect,
-  useLocation,
-} from "react-router-dom";
+import { Route, Switch, useHistory, Redirect } from "react-router-dom";
 
 import Main from "../Main/Main";
 import Movies from "../Movies/Movies";
@@ -27,10 +21,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({ name: "", email: "" });
   const history = useHistory();
-  const location = useLocation.pathname;
 
   const authorization = (email, password, setError, resetForm) => {
-    localStorage.clear();
     MainApi.authorize(email, password)
       .then((data) => {
         if (data.token) {
@@ -62,9 +54,7 @@ function App() {
 
   const signOut = () => {
     setLoggedIn(false);
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("beatfilms");
-    localStorage.removeItem("saved");
+    localStorage.clear();
     history.push("/");
   };
 
@@ -75,24 +65,31 @@ function App() {
         if (res) {
           setLoggedIn(true);
           setCurrentUser({ name: res.name, email: res.email });
+          localStorage.setItem("checkedToken", true);
         }
       });
     }
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     let cleanupFunction = false;
+    const saved = localStorage.getItem("saved");
+
     if (!loggedIn) return;
-    if (localStorage.saved) {
+
+    if (saved && JSON.parse(saved).length > 0) {
       setSavedFilms(JSON.parse(localStorage.saved));
-    } else if (location === "/movies" || location === "/saved-movies") {
+    } else {
       MainApi.getMovies(localStorage.getItem("jwt")).then((res) => {
-        if(!cleanupFunction) setSavedFilms(res);
-        localStorage.setItem("saved", JSON.stringify(res));
+        if (!cleanupFunction) setSavedFilms(res);
       });
     }
-    return () => cleanupFunction = true;
-  }, [loggedIn, location]);
+    return () => (cleanupFunction = true);
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (savedFilms) localStorage.setItem("saved", JSON.stringify(savedFilms));
+  });
 
   const filterMovies = (films, value, short, setError) => {
     const ent = (item, value) =>
@@ -130,8 +127,20 @@ function App() {
         api
           .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
           .then((res) => {
-            localStorage.setItem(nameArrayMovies, JSON.stringify(res));
             setFilms(filterMovies(res, value, short, setError));
+            if (!api === MoviesApi)
+              localStorage.setItem(nameArrayMovies, JSON.stringify(res));
+
+            if (api === MoviesApi)
+              localStorage.setItem(
+                nameArrayMovies,
+                JSON.stringify(filterMovies(res, value, short, setError))
+              );
+            /* ? localStorage.setItem(nameArrayMovies, JSON.stringify(res))
+              : localStorage.setItem(
+                  nameArrayMovies,
+                  JSON.stringify(beatfilms)
+                ); */
           })
           .catch((err) =>
             setError(
@@ -159,9 +168,8 @@ function App() {
       <div className="page">
         <Switch>
           <Route exact path="/">
-            <Main />
+            <Main loggedIn={loggedIn} />
           </Route>
-
           <ProtectedRoute
             path="/movies"
             component={Movies}
@@ -199,8 +207,13 @@ function App() {
             )}
           </Route>
           <Route path="/sign-up">
-            <Register registration={registration} />
+            {loggedIn ? (
+              <Redirect to="/movies" />
+            ) : (
+              <Register registration={registration} />
+            )}
           </Route>
+
           <Route path="/*">
             <NotFoundPage />
           </Route>

@@ -29,7 +29,6 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
   };
 
   const filterResult = () => {
-
     if (films && (films.length > 0 || !films.length)) {
       searchFilms(
         type,
@@ -40,6 +39,7 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
 
       setSavedAfterFilterMovies([...films]);
     } else {
+      setError("");
       setFilms([...savedAfterFilterMovies]);
     }
   };

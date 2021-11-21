@@ -31,6 +31,8 @@ const AuthForm = ({
                 if (item[0] === "password") item[0] = "Пароль:";
                 if (item[0] === "email") item[0] = "Email:";
                 if (item[0] === "name") item[0] = "Имя:";
+                if(item[1] === "Введите данные в указанном формате.") item[1] = "Введите данные в указанном формате - example@mail.ru"
+
                 return (
                   <p key={ind} className="auth__error">
                     {`${item[0]} ${item[1]}`}

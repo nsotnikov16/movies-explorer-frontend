@@ -23,17 +23,23 @@ function MoviesCard({
 
   const handleLikeCard = () => {
     const jwt = localStorage.getItem("jwt");
+    console.log(data)
     if (!isLiked)
       MainApi.saveMovie(jwt, data).then((res) => {
-        setSavedFilms([res, ...savedFilms]);
-        setIsLiked(true);
-      });
+        if (res._id) {
+          setSavedFilms([res, ...savedFilms]);
+          setIsLiked(true);
+          return
+        }
+        alert('Невозможно сохранить данную карточку')
+      }).catch(() => alert('Невозможно сохранить данную карточку'));
 
     if (isLiked) {
       const currentMovie = savedFilms.find((item) => item.movieId === data.id);
       MainApi.deleteMovie(currentMovie._id, jwt)
         .then((res) => {
-          if(res) setSavedFilms(savedFilms.filter((item) => item !== currentMovie));
+          if (res)
+            setSavedFilms(savedFilms.filter((item) => item !== currentMovie));
         })
         .catch((err) => console.log(err));
     }
@@ -43,8 +49,9 @@ function MoviesCard({
     MainApi.deleteMovie(data._id, jwt)
       .then((res) => {
         if (res) {
+          /* console.log(films.filter((film) => film._id !== data._id)) */
           setFilms(films.filter((film) => film._id !== data._id));
-          localStorage.setItem("saved", JSON.stringify(films));
+          /* localStorage.setItem("saved", JSON.stringify(films)); */
         }
       })
       .catch((err) => console.log(err));
@@ -62,11 +69,19 @@ function MoviesCard({
     <li
       className={`movies__card ${number <= counter ? "" : "movies__card_hide"}`}
     >
-      <a target="_blank" href={data.trailerLink} rel="noreferrer">
+      <a
+        target="_blank"
+        href={data.trailerLink || data.trailer}
+        rel="noreferrer"
+      >
         <img src={src} alt="Movie" className="movies__img" />
       </a>
       <div className="movies__description">
-        <a target="_blank" href={data.trailerLink} rel="noreferrer">
+        <a
+          target="_blank"
+          href={data.trailerLink || data.trailer}
+          rel="noreferrer"
+        >
           <p className="movies__name">{data.nameRU}</p>
         </a>
         <div

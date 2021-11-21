@@ -4,6 +4,7 @@ import Preloader from "../Preloader/Preloader";
 import "./Movies.css";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import { useEffect } from "react";
 
 const Movies = ({
   beatfilms,
@@ -12,10 +13,18 @@ const Movies = ({
   searchFilms,
   setSavedFilms,
   savedFilms,
+  loggedIn,
 }) => {
+  useEffect(() => {
+    const beatfilmsLocal = localStorage.getItem("beatfilms");
+    if (beatfilmsLocal && JSON.parse(beatfilmsLocal).length > 0) {
+      setBeatfilms(JSON.parse(beatfilmsLocal));
+    }
+  }, [setBeatfilms]);
+
   return (
     <>
-      <Header />
+      <Header loggedIn={loggedIn} />
       <div className="main">
         <section className="movies">
           <div className="page__container page__container_movies">

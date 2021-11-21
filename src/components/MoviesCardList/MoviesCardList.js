@@ -2,7 +2,7 @@ import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import { editCounter, handleCounter } from "../../utils/utils";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 
 const MoviesCardList = ({ films, setFilms, setSavedFilms, savedFilms }) => {
   let [showButtonMore, setShowButtonMore] = useState(false);
@@ -34,15 +34,19 @@ const MoviesCardList = ({ films, setFilms, setSavedFilms, savedFilms }) => {
     return films.map((data, index) => {
       return (
         <MoviesCard
-          key={index}
+          key={data.id || data.movieId}
           number={index + 1}
           counter={counter}
           data={data}
-          films = {films}
+          films={films}
           setFilms={setFilms}
           setSavedFilms={setSavedFilms}
           savedFilms={savedFilms}
-          src={location === '/saved-movies' ? data.image : `https://api.nomoreparties.co${data.image.url}`}
+          src={
+            location === "/saved-movies"
+              ? data.image
+              : `https://api.nomoreparties.co${data.image.url}`
+          }
         />
       );
     });

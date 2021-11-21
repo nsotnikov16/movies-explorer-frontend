@@ -1,17 +1,18 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import { useFormWithValidation } from "../ValidationForm/ValidationForm";
 import MainApi from "../../utils/MainApi";
 import Header from "../Header/Header";
 import "./Profile.css";
+import { useHistory } from "react-router-dom";
 
-const Profile = ({ signOut }) => {
+const Profile = ({ signOut, loggedIn }) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const [successfully, setSuccessfully] = useState("");
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [error, setError] = useState("");
-
+  const history = useHistory()
   const {
     values,
     handleChange,
@@ -19,13 +20,18 @@ const Profile = ({ signOut }) => {
     isValid,
     setIsValid,
     resetForm,
+    setValues
   } = useFormWithValidation(setError, currentUser);
   const check = isEdit && !isValid;
-
+  console.log(values)
   const clearMessage = () => {
     setSuccessfully("");
     setError("");
   };
+
+  useEffect(() => {
+    setValues({name: currentUser.name, email: currentUser.email})
+  }, [history, currentUser, setValues])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,7 +53,7 @@ const Profile = ({ signOut }) => {
   };
   return (
     <>
-      <Header />
+      <Header loggedIn={loggedIn}/>
       <section className="profile">
         <div className="profile__container">
           <h1 className="profile__hello">Привет, {currentUser.name}!</h1>
@@ -86,6 +92,7 @@ const Profile = ({ signOut }) => {
                   name="email"
                   minLength="3"
                   maxLength="30"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                   className="profile__input"
                 />
               </li>
