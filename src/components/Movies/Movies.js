@@ -17,7 +17,11 @@ const Movies = ({
 }) => {
   useEffect(() => {
     const beatfilmsLocal = localStorage.getItem("beatfilms");
-    if (beatfilmsLocal && JSON.parse(beatfilmsLocal).length > 0) {
+    if (
+      beatfilmsLocal &&
+      beatfilmsLocal !== "undefined" &&
+      JSON.parse(beatfilmsLocal).length > 0
+    ) {
       setBeatfilms(JSON.parse(beatfilmsLocal));
     }
   }, [setBeatfilms]);

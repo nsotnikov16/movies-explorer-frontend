@@ -6,10 +6,16 @@ import Preloader from "../Preloader/Preloader";
 
 import "../Movies/Movies.css";
 
-const SavedMovies = ({ savedFilms, setSavedFilms, isLoading, searchFilms, loggedIn }) => {
+const SavedMovies = ({
+  savedFilms,
+  setSavedFilms,
+  isLoading,
+  searchFilms,
+  loggedIn,
+}) => {
   return (
     <>
-      <Header loggedIn={loggedIn}/>
+      <Header loggedIn={loggedIn} />
       <div className="main">
         <section className="movies">
           <div className="page__container page__container_movies">

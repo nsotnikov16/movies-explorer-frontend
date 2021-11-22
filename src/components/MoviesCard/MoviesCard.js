@@ -23,16 +23,18 @@ function MoviesCard({
 
   const handleLikeCard = () => {
     const jwt = localStorage.getItem("jwt");
-    console.log(data)
+
     if (!isLiked)
-      MainApi.saveMovie(jwt, data).then((res) => {
-        if (res._id) {
-          setSavedFilms([res, ...savedFilms]);
-          setIsLiked(true);
-          return
-        }
-        alert('Невозможно сохранить данную карточку')
-      }).catch(() => alert('Невозможно сохранить данную карточку'));
+      MainApi.saveMovie(jwt, data)
+        .then((res) => {
+          if (res._id) {
+            setSavedFilms([res, ...savedFilms]);
+            setIsLiked(true);
+            return;
+          }
+          alert("Невозможно сохранить данную карточку");
+        })
+        .catch(() => alert("Невозможно сохранить данную карточку"));
 
     if (isLiked) {
       const currentMovie = savedFilms.find((item) => item.movieId === data.id);
@@ -49,9 +51,7 @@ function MoviesCard({
     MainApi.deleteMovie(data._id, jwt)
       .then((res) => {
         if (res) {
-          /* console.log(films.filter((film) => film._id !== data._id)) */
           setFilms(films.filter((film) => film._id !== data._id));
-          /* localStorage.setItem("saved", JSON.stringify(films)); */
         }
       })
       .catch((err) => console.log(err));

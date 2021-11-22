@@ -8,8 +8,8 @@ import "./SearchForm.css";
 const SearchForm = ({ searchFilms, setFilms, films }) => {
   const location = useLocation().pathname;
   const [error, setError] = useState(null);
-  const [savedAfterFilterMovies, setSavedAfterFilterMovies] = useState([]);
   const type = location === "/movies" ? "beatfilms" : "saved";
+  const [isChecked, setIsChecked] = useState(false);
 
   const searchRef = useRef();
   const checkboxRef = useRef();
@@ -17,7 +17,7 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
   const submitForm = (e) => {
     e.preventDefault();
     setFilms([]);
-    setError(null);
+    setError("");
     if (searchRef.current.value.length < 1)
       return setError("Нужно ввести ключевое слово");
     searchFilms(
@@ -29,20 +29,9 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
   };
 
   const filterResult = () => {
-    if (films && (films.length > 0 || !films.length)) {
-      searchFilms(
-        type,
-        searchRef.current.value,
-        checkboxRef.current.checked,
-        setError
-      );
-
-      setSavedAfterFilterMovies([...films]);
-    } else {
-      setError("");
-      setFilms([...savedAfterFilterMovies]);
-    }
+    searchFilms(type, searchRef.current.value, !isChecked, setError);
   };
+
   return (
     <div className="search ">
       <form onSubmit={submitForm} className="search__form">
@@ -60,7 +49,12 @@ const SearchForm = ({ searchFilms, setFilms, films }) => {
           <button className="search__button"></button>
         </div>
 
-        <FilterCheckbox filterResult={filterResult} checkboxRef={checkboxRef} />
+        <FilterCheckbox
+          setIsChecked={setIsChecked}
+          isChecked={isChecked}
+          filterResult={filterResult}
+          checkboxRef={checkboxRef}
+        />
 
         {error && <p className="search__error">{error}</p>}
       </form>

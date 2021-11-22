@@ -92,6 +92,7 @@ function App() {
   });
 
   const filterMovies = (films, value, short, setError) => {
+    setError("");
     const ent = (item, value) =>
       Object.entries(item).some(
         (e) =>
@@ -107,50 +108,34 @@ function App() {
   };
 
   const searchFilms = (type, value, short, setError) => {
+    type === "beatfilms" ? setBeatfilms([]) : setSavedFilms([]);
     setIsLoading(true);
 
     const getFilms = (api) => {
       const nameArrayMovies = api === MoviesApi ? "beatfilms" : "saved";
       const setFilms = api === MoviesApi ? setBeatfilms : setSavedFilms;
-      if (localStorage.getItem(nameArrayMovies)) {
-        setIsLoading(false);
 
-        setFilms(
-          filterMovies(
-            JSON.parse(localStorage.getItem(nameArrayMovies)),
-            value,
-            short,
-            setError
-          )
-        );
-      } else {
-        api
-          .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
-          .then((res) => {
-            setFilms(filterMovies(res, value, short, setError));
-            if (!api === MoviesApi)
-              localStorage.setItem(nameArrayMovies, JSON.stringify(res));
+      api
+        .getMovies(type === "saved" ? localStorage.getItem("jwt") : "")
+        .then((res) => {
+          setFilms(filterMovies(res, value, short, setError));
+          if (!api === MoviesApi)
+            localStorage.setItem(nameArrayMovies, JSON.stringify(res));
 
-            if (api === MoviesApi)
-              localStorage.setItem(
-                nameArrayMovies,
-                JSON.stringify(filterMovies(res, value, short, setError))
-              );
-            /* ? localStorage.setItem(nameArrayMovies, JSON.stringify(res))
-              : localStorage.setItem(
-                  nameArrayMovies,
-                  JSON.stringify(beatfilms)
-                ); */
-          })
-          .catch((err) =>
-            setError(
-              type === "saved"
-                ? err
-                : "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
-            )
+          if (api === MoviesApi)
+            localStorage.setItem(
+              nameArrayMovies,
+              JSON.stringify(filterMovies(res, value, short, setError))
+            );
+        })
+        .catch((err) =>
+          setError(
+            type === "saved"
+              ? err
+              : "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
           )
-          .finally(() => setIsLoading(false));
-      }
+        )
+        .finally(() => setIsLoading(false));
     };
 
     if (type === "beatfilms") getFilms(MoviesApi);
