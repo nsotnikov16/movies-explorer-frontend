@@ -14,11 +14,12 @@ a,
           box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background: transparent;
+  background: inherit;
 }
 
 a {
   text-decoration: none;
+  color: black;
 }
 
 ul {
@@ -28,12 +29,16 @@ ul {
 .page {
   font-family: "Inter";
   background: #FAFAFA;
+  height: 100vh;
 }
+
+
 .page__container {
   margin: 0 auto;
   max-width: 1280px;
   padding: 0 70px;
 }
+
 
 @media (max-width: 1280px) {
   .page__container {
@@ -110,15 +115,18 @@ ul {
   border: 0;
   outline: none;
 }
-.submit-btn:hover {
+.submit-btn:hover:not(.submit-btn_disabled) {
   cursor: pointer;
   opacity: 0.8;
 }
 
-.submit-btn_disabled {
+.submit-btn_disabled, .submit-btn:disabled {
   color: #C2C2C2;
   background: #F8F8F8;
+  cursor: not-allowed;
 }
+
+
 
 @media (max-width: 480px) {
   .submit-btn {

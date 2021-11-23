@@ -1,6 +1,40 @@
-const Login = () => {
+import { useState } from "react";
+import AuthForm from "../AuthForm/AuthForm";
+import { useFormWithValidation } from "../ValidationForm/ValidationForm";
+
+const Login = ({ authorization }) => {
+  const [error, setError] = useState("");
+  const {
+    values,
+    handleChange,
+    errorsValidation,
+    setErrorsValidation,
+    isValid,
+    setIsValid,
+    resetForm,
+  } = useFormWithValidation(setError);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!values.email || !values.password) {
+      return;
+    }
+    setIsValid(false);
+    authorization(values.email, values.password, setError, resetForm);
+  };
   return (
-    <>
+    <AuthForm
+      email={values.email}
+      password={values.password}
+      hello="Рады видеть!"
+      type="login"
+      error={error}
+      submitForm={handleSubmit}
+      setError={setError}
+      isValid={isValid}
+      errorsValidation={errorsValidation}
+      setErrorsValidation={setErrorsValidation}
+    >
       <li className="auth__row">
         <label htmlFor="email" className="auth__label">
           E-mail
@@ -12,8 +46,11 @@ const Login = () => {
           name="email"
           autoComplete="off"
           minLength="3"
-          maxLength="15"
+          maxLength="50"
           className="auth__input"
+          value={values.email}
+          onChange={handleChange}
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
         />
       </li>
       <li className="auth__row">
@@ -29,9 +66,11 @@ const Login = () => {
           minLength="3"
           maxLength="15"
           className="auth__input"
+          value={values.password}
+          onChange={handleChange}
         />
       </li>
-    </>
+    </AuthForm>
   );
 };
 

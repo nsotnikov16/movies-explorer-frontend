@@ -3,10 +3,10 @@ import logo from "../../images/logo.svg";
 import Navigation from "../Navigation/Navigation";
 import "./Header.css";
 
-const Header = () => {
+const Header = ({loggedIn}) => {
   const location = useLocation().pathname;
   return (
-    <header className={`header ${location === "/" ? "header_about" : ""}`}>
+    <header className={`header ${!loggedIn ? "header_about" : ""}`}>
       <div
         className={`page__container ${
           location === "/movies" || location === "/saved-movies"
@@ -19,7 +19,7 @@ const Header = () => {
             <img src={logo} alt="Logo" className="logo" />
           </Link>
 
-          {location === "/" ? (
+          {!loggedIn ? (
             <ul className="links links_about">
               <li className="links__list links__list_about">
                 <Link to="/sign-up" className="link">
@@ -39,6 +39,6 @@ const Header = () => {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

@@ -3,8 +3,7 @@
 .movies__cards {
   padding: 70px 0 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, -webkit-max-content));
-  grid-template-columns: repeat(auto-fit, minmax(270px, max-content));
+  grid-template-columns: repeat(auto-fit, 270px);
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;

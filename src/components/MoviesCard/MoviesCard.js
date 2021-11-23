@@ -1,24 +1,91 @@
 import "./MoviesCard.css";
 import { useLocation } from "react-router-dom";
-import movieImg from "../../images/movie.png";
-import { useState } from "react";
-function MoviesCard({ duration, name }) {
+import { useEffect, useState } from "react";
+import MainApi from "../../utils/MainApi";
+function MoviesCard({
+  data,
+  counter,
+  number,
+  src,
+  films,
+  setFilms,
+  savedFilms,
+  setSavedFilms,
+}) {
   const location = useLocation().pathname;
-  const [isLiked, setIsLiked] = useState(false)
-  
-  const handleLikeCard = () => setIsLiked(!isLiked)
+  const [isLiked, setIsLiked] = useState(false);
 
-  //На следующий этап :)
+  useEffect(() => {
+    savedFilms && savedFilms.some((item) => item.nameRU === data.nameRU)
+      ? setIsLiked(true)
+      : setIsLiked(false);
+  }, [savedFilms, data.nameRU]);
+
+  const handleLikeCard = () => {
+    const jwt = localStorage.getItem("jwt");
+
+    if (!isLiked)
+      MainApi.saveMovie(jwt, data)
+        .then((res) => {
+          if (res._id) {
+            setSavedFilms([res, ...savedFilms]);
+            setIsLiked(true);
+            return;
+          }
+          alert("Невозможно сохранить данную карточку");
+        })
+        .catch(() => alert("Невозможно сохранить данную карточку"));
+
+    if (isLiked) {
+      const currentMovie = savedFilms.find((item) => item.movieId === data.id);
+      MainApi.deleteMovie(currentMovie._id, jwt)
+        .then((res) => {
+          if (res)
+            setSavedFilms(savedFilms.filter((item) => item !== currentMovie));
+        })
+        .catch((err) => console.log(err));
+    }
+  };
   const deleteCard = () => {
-    
+    const jwt = localStorage.getItem("jwt");
+    MainApi.deleteMovie(data._id, jwt)
+      .then((res) => {
+        if (res) {
+          setFilms(films.filter((film) => film._id !== data._id));
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  function getTimeFromMins(mins) {
+    let hours = Math.trunc(mins / 60);
+    let minutes = mins % 60;
+    if (mins < 60) return minutes + "м";
+    if (mins % 60 === 0) return hours + "ч ";
+    return hours + "ч " + minutes + "м";
   }
 
   return (
-    <li className="movies__card">
-      <img src={movieImg} alt="Movie" className="movies__img" />
+    <li
+      className={`movies__card ${number <= counter ? "" : "movies__card_hide"}`}
+    >
+      <a
+        target="_blank"
+        href={data.trailerLink || data.trailer}
+        rel="noreferrer"
+      >
+        <img src={src} alt="Movie" className="movies__img" />
+      </a>
       <div className="movies__description">
-        <p className="movies__name">{name}</p>
-        <div onClick={location !== "/saved-movies" ? handleLikeCard : deleteCard}
+        <a
+          target="_blank"
+          href={data.trailerLink || data.trailer}
+          rel="noreferrer"
+        >
+          <p className="movies__name">{data.nameRU}</p>
+        </a>
+        <div
+          onClick={location !== "/saved-movies" ? handleLikeCard : deleteCard}
           className={
             location === "/saved-movies"
               ? "movies__trash"
@@ -26,7 +93,7 @@ function MoviesCard({ duration, name }) {
           }
         ></div>
       </div>
-      <p className="movies__duration">{duration}</p>
+      <p className="movies__duration">{getTimeFromMins(data.duration)}</p>
     </li>
   );
 }

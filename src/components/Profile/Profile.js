@@ -1,82 +1,174 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { useFormWithValidation } from "../ValidationForm/ValidationForm";
+import MainApi from "../../utils/MainApi";
+import Header from "../Header/Header";
 import "./Profile.css";
+import { useHistory } from "react-router-dom";
 
-const Profile = ({ name, email }) => {
+const Profile = ({ signOut, loggedIn }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [userName, setUserName] = useState(name);
-  const [userEmail, setUserEmail] = useState(email);
 
-  const handleChange = ({ target }) => {
-    target.name === "name"
-      ? setUserName(target.value)
-      : setUserEmail(target.value);
+  const [successfully, setSuccessfully] = useState("");
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const [error, setError] = useState("");
+  const history = useHistory()
+  const {
+    values,
+    handleChange,
+    errorsValidation,
+    isValid,
+    setIsValid,
+    resetForm,
+    setValues
+  } = useFormWithValidation(setError, currentUser);
+  const check = isEdit && !isValid;
+  console.log(values)
+  const clearMessage = () => {
+    setSuccessfully("");
+    setError("");
+  };
+
+  useEffect(() => {
+    setValues({name: currentUser.name, email: currentUser.email})
+  }, [history, currentUser, setValues])
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsValid(false);
+    MainApi.editProfile(values.name, values.email, localStorage.getItem("jwt"))
+      .then((res) => {
+        if (res.email) {
+          setSuccessfully("Данные изменены успешно!");
+
+          setIsEdit(false);
+          return setCurrentUser({ name: res.name, email: res.email });
+        }
+      })
+      .catch((err) => setError(err))
+      .finally(() => {
+        setTimeout(() => clearMessage(), 3000);
+        resetForm();
+      });
   };
   return (
-    <section className="profile">
-      <div className="profile__container">
-        <h1 className="profile__hello">Привет, {name}!</h1>
-        <form className="profile__form">
-          <ul className="profile__rows">
-            <li className="profile__row">
-              <label htmlFor="name" className="profile__label">
-                Имя
-              </label>
-              <input
-                type="text"
-                onInput={handleChange}
-                autoComplete="off"
-                id="name"
-                disabled={!isEdit}
-                value={userName}
-                name="name"
-                className="profile__input"
-              />
-            </li>
-            <li className="profile__row">
-              <label htmlFor="email" className="profile__label">
-                E-mail
-              </label>
-              <input
-                type="email"
-                onInput={handleChange}
-                autoComplete="off"
-                id="email"
-                disabled={!isEdit}
-                value={userEmail}
-                name="email"
-                className="profile__input"
-              />
-            </li>
-          </ul>
-          {isEdit ? (
+    <>
+      <Header loggedIn={loggedIn}/>
+      <section className="profile">
+        <div className="profile__container">
+          <h1 className="profile__hello">Привет, {currentUser.name}!</h1>
+          <form onSubmit={handleSubmit} className="profile__form">
+            <ul className="profile__rows">
+              <li className="profile__row">
+                <label htmlFor="name" className="profile__label">
+                  Имя
+                </label>
+                <input
+                  type="text"
+                  onChange={handleChange}
+                  autoComplete="off"
+                  id="name"
+                  disabled={!isEdit}
+                  value={values.name}
+                  required
+                  minLength="3"
+                  maxLength="30"
+                  name="name"
+                  className="profile__input"
+                />
+              </li>
+              <li className="profile__row">
+                <label htmlFor="email" className="profile__label">
+                  E-mail
+                </label>
+                <input
+                  type="email"
+                  required
+                  onChange={handleChange}
+                  autoComplete="off"
+                  id="email"
+                  disabled={!isEdit}
+                  value={values.email}
+                  name="email"
+                  minLength="3"
+                  maxLength="30"
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                  className="profile__input"
+                />
+              </li>
+            </ul>
+            {errorsValidation &&
+            Object.values(errorsValidation).filter((item) => item !== "")
+              .length > 0
+              ? Object.entries(errorsValidation).map((item, ind) => {
+                  if (item[1] === "") item[0] = "";
+                  if (item[0] === "email") item[0] = "Email:";
+                  if (item[0] === "name") item[0] = "Имя:";
+                  return (
+                    <p key={ind} className="profile__error-validation">
+                      {`${item[0]} ${item[1]}`}
+                    </p>
+                  );
+                })
+              : ""}
+
             <div className="profile__form-down">
               <p
-                className={
-                  `profile__error ` /* profile__error_show (для проверки) */
-                }
+                className={`profile__message ${
+                  error ? "profile__message_error" : ""
+                } ${successfully ? "profile__message_successfully" : ""}`}
               >
-                При обновлении профиля произошла ошибка
+                {error || successfully}
               </p>
-              <button className="profile__save submit-btn">Сохранить</button>
+
+              {isEdit ? (
+                <button
+                  disabled={!isValid}
+                  className={`profile__save submit-btn ${
+                    !isValid ? "submit-btn_disabled" : ""
+                  }`}
+                >
+                  Сохранить
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTimeout(() => {
+                      setIsEdit(!isEdit);
+                      /*  setIsValid(false); */
+                    }, 100);
+
+                    clearMessage();
+                  }}
+                  className="profile__edit"
+                >
+                  Редактировать
+                </button>
+              )}
             </div>
-          ) : (
-            <button
-              onClick={() => setIsEdit(!isEdit)}
-              type="button"
-              className="profile__edit"
-            >
-              Редактировать
-            </button>
-          )}
-        </form>
-        <a
-          href="/"
-          className={`profile__link ${isEdit ? "profile__link_hide" : ""}`}
-        >
-          Выйти из аккаунта
-        </a>
-      </div>
-    </section>
+          </form>
+
+          <a
+            href="/"
+            className={`profile__link  ${
+              isEdit && isValid ? "profile__link_hide" : ""
+            }`}
+            onClick={(e) => {
+              if (check) {
+                e.preventDefault();
+
+                setIsEdit(false);
+                return;
+              }
+              signOut();
+            }}
+          >
+            {check ? "Отменить" : "Выйти из аккаунта"}
+          </a>
+        </div>
+      </section>
+    </>
   );
 };
 

@@ -1,7 +1,12 @@
+.movies__card_hide {
+  display: none;
+}
+
 .movies__img {
   width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
+  height: 151px;
 }
 .movies__description {
   margin-top: 14px;
@@ -67,11 +72,10 @@
 }
 
 @media (max-width: 768px) {
-  /* Временно для пиксель перфект */
-  .movies__card:not(:nth-child(-n + 8)) {
-    display: none;
-  }
 
+  .movies__img {
+    height: 190px;
+  }
   .movies__description {
     height: 45px;
   }
@@ -83,13 +87,10 @@
 }
 
 @media (max-width: 480px) {
-  /* Временно для пиксель перфект */
-  .movies__card:not(:nth-child(-n + 5)) {
-    display: none;
-  }
   .movies__description {
     margin-top: 15px;
   }
+
   .movies__name {
     font-size: 12px;
     line-height: 15px;

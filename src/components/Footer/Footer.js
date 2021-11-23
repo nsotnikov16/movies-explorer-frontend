@@ -24,7 +24,8 @@ const Footer = () => {
               <a
                 href="https://practicum.yandex.ru"
                 target="_blank"
-                className="link link_footer" rel="noreferrer"
+                className="link link_footer"
+                rel="noreferrer"
               >
                 Яндекс.Практикум
               </a>
@@ -33,7 +34,8 @@ const Footer = () => {
               <a
                 href="https://github.com/nsotnikov16"
                 className="link link_footer"
-                target="_blank" rel="noreferrer"
+                target="_blank"
+                rel="noreferrer"
               >
                 GitHub
               </a>
@@ -42,7 +44,8 @@ const Footer = () => {
               <a
                 href="https://www.instagram.com/n_stnkv/"
                 target="_blank"
-                className="link link_footer" rel="noreferrer"
+                className="link link_footer"
+                rel="noreferrer"
               >
                 Instagram
               </a>
@@ -52,6 +55,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

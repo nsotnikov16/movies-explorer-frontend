@@ -1,5 +1,5 @@
 import promo from "../../images/promo__logo.png";
-import './Promo.css';
+import "./Promo.css";
 
 const Promo = () => {
   return (
@@ -14,6 +14,6 @@ const Promo = () => {
       </div>
     </section>
   );
-}
+};
 
 export default Promo;

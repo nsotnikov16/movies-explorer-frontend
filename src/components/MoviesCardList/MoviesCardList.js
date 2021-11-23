@@ -1,21 +1,52 @@
 import "./MoviesCardList.css";
-import "../MoviesCard/MoviesCard";
 import MoviesCard from "../MoviesCard/MoviesCard";
+import { editCounter, handleCounter } from "../../utils/utils";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
-const MoviesCardList = ({ quantity }) => {
-  //Для верстки
-  function moviesItems() {
-    let movies = [];
-    for (let i = 1; i <= quantity; i++) {
-      movies[i] = i;
-    }
+const MoviesCardList = ({ films, setFilms, setSavedFilms, savedFilms }) => {
+  let [showButtonMore, setShowButtonMore] = useState(false);
+  let [counter, setCounter] = useState(null);
+  const location = useLocation().pathname;
 
-    return movies.map((item) => {
+  const showMoreMovies = (width) => {
+    if (counter >= films.length) return setShowButtonMore(false);
+    editCounter(width, setCounter, counter);
+  };
+
+  useEffect(() => handleCounter(window.innerWidth, setCounter), []);
+
+  useEffect(() => {
+    location === "/movies" && films && films.length > counter
+      ? setShowButtonMore(true)
+      : setShowButtonMore(false);
+  }, [location, films, counter]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () =>
+      handleCounter(window.innerWidth, setCounter)
+    );
+  });
+
+  if (!films) return null;
+
+  function moviesItems(films) {
+    return films.map((data, index) => {
       return (
         <MoviesCard
-          key={item}
-          name="Когда я думаю о Германии ночью"
-          duration="2ч 50мин"
+          key={data.id || data.movieId}
+          number={index + 1}
+          counter={counter}
+          data={data}
+          films={films}
+          setFilms={setFilms}
+          setSavedFilms={setSavedFilms}
+          savedFilms={savedFilms}
+          src={
+            location === "/saved-movies"
+              ? data.image
+              : `https://api.nomoreparties.co${data.image.url}`
+          }
         />
       );
     });
@@ -24,11 +55,18 @@ const MoviesCardList = ({ quantity }) => {
   return (
     <>
       <ul className="movies__cards">
-        <>{moviesItems()}</>
+        <>{moviesItems(films)}</>
       </ul>
-      <button className="movies__more">Еще</button>
+      {showButtonMore && (
+        <button
+          onClick={() => showMoreMovies(window.innerWidth)}
+          className="movies__more"
+        >
+          Еще
+        </button>
+      )}
     </>
   );
-}
+};
 
 export default MoviesCardList;

@@ -1,10 +1,7 @@
 import photo from "../../images/myphoto.jpg";
 import "./AboutMe.css";
-import { PageContext } from "../../contexts/PageContext";
-import { useContext } from "react";
 
-const AboutMe = () => {
-  const {aboutmeRef} = useContext(PageContext)
+const AboutMe = ({ aboutmeRef }) => {
   return (
     <section ref={aboutmeRef} className="aboutme">
       <div className="page__container">
@@ -45,6 +42,6 @@ const AboutMe = () => {
       </div>
     </section>
   );
-}
+};
 
 export default AboutMe;
